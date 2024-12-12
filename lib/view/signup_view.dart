@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'login_view.dart';  // Import LoginView
 
 class SignUpView extends StatelessWidget {
   const SignUpView({super.key});
@@ -8,7 +9,6 @@ class SignUpView extends StatelessWidget {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
 
-    // Adjust the image height based on screen height (30% of screen height)
     double imageHeight = screenHeight * 0.3;
     if (screenWidth > screenHeight) {
       imageHeight = screenHeight * 0.2; // Adjust image size for landscape
@@ -30,25 +30,25 @@ class SignUpView extends StatelessWidget {
                   // Container for the logo image
                   SizedBox(
                     height: imageHeight,
-                    width: double.infinity, // Full width of the screen
+                    width: double.infinity,
                     child: Container(
                       decoration: const BoxDecoration(
-                        color: Colors.black, // Set the background color to black
+                        color: Colors.black,
                         borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(20),
                           bottomRight: Radius.circular(20),
-                        ), // Optional rounded corners
+                        ),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Image.asset(
                           'assets/images/logo.png', // Replace with your logo image path
-                          fit: BoxFit.contain, // Ensure the image scales proportionally
+                          fit: BoxFit.contain,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20), // Add spacing below the logo image
+                  const SizedBox(height: 20),
 
                   // Sign Up title
                   const Text(
@@ -62,7 +62,7 @@ class SignUpView extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
 
-                  // Example text field for name
+                  // Name TextField
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
                     child: TextField(
@@ -71,14 +71,14 @@ class SignUpView extends StatelessWidget {
                         labelStyle: const TextStyle(fontFamily: 'Raleway'),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: Colors.black, width: 2), // Darker border
+                          borderSide: const BorderSide(color: Colors.black, width: 2),
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
 
-                  // Example text field for email
+                  // Email TextField
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
                     child: TextField(
@@ -87,14 +87,14 @@ class SignUpView extends StatelessWidget {
                         labelStyle: const TextStyle(fontFamily: 'Raleway'),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: Colors.black, width: 2), // Darker border
+                          borderSide: const BorderSide(color: Colors.black, width: 2),
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
 
-                  // Example text field for password
+                  // Password TextField
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
                     child: TextField(
@@ -104,7 +104,7 @@ class SignUpView extends StatelessWidget {
                         labelStyle: const TextStyle(fontFamily: 'Raleway'),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: Colors.black, width: 2), // Darker border
+                          borderSide: const BorderSide(color: Colors.black, width: 2),
                         ),
                       ),
                     ),
@@ -115,17 +115,17 @@ class SignUpView extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0),
                     child: SizedBox(
-                      width: double.infinity, // Make the button as wide as possible
+                      width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
                           // Handle sign-up button press
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF990000), // Button color
-                          foregroundColor: Colors.white, // Text color
-                          padding: const EdgeInsets.symmetric(vertical: 15), // Button padding
+                          backgroundColor: const Color(0xFF990000),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 15),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10), // Rounded corners
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         child: const Text(
@@ -177,7 +177,7 @@ class SignUpView extends StatelessWidget {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 foregroundColor: Colors.black,
-                                side: const BorderSide(color: Colors.grey), // Border color
+                                side: const BorderSide(color: Colors.grey),
                               ),
                             ),
                             ElevatedButton.icon(
@@ -217,7 +217,11 @@ class SignUpView extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            // Handle sign-in navigation
+                            // Navigate to LoginView when tapped
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const LoginView()),
+                            );
                           },
                           child: const Text(
                             'Sign In',

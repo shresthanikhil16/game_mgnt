@@ -1,4 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:game_mgnt/view/login_view.dart';
+
+// Placeholder for LoginPage
+class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Login')),
+      body: Center(
+        child: const Text('Login Page Content Here'),
+      ),
+    );
+  }
+}
 
 class GetStartedView extends StatelessWidget {
   const GetStartedView({super.key});
@@ -90,7 +106,11 @@ class GetStartedView extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 20.0), // Reduced vertical padding
                 child: ElevatedButton(
                   onPressed: () {
-                    // Handle button press here, such as navigating to another screen
+                    // Navigate to LoginPage when the button is pressed
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginView()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF990000), // Set button color to #990000 (red)

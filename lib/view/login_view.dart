@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:game_mgnt/view/dashboard_view.dart';
+import 'signup_view.dart';  // Make sure to import your SignupView
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -131,7 +133,11 @@ class LoginView extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Handle login button press
+                        // Navigate to DashboardView when the button is pressed
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const DashboardView()),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF990000),
@@ -224,7 +230,11 @@ class LoginView extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          // Handle sign-up navigation
+                          // Navigate to SignupView when tapped
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const SignUpView()),
+                          );
                         },
                         child: const Text(
                           'Sign Up',
