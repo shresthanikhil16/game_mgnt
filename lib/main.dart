@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_mgnt/view/get_started_view.dart';
-import 'package:game_mgnt/view/login_view.dart';
-import 'package:game_mgnt/view/signup_view.dart';
+import 'package:game_mgnt/view/dashboard_view.dart';
 
 
 void main() {
@@ -9,8 +7,8 @@ void main() {
     MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => const LoginView(),
-        '/output': (context) => const LoginView(),
+        '/': (context) => const DashboardView(),
+        '/output': (context) => const DashboardView(),
       },
     ),
   );
