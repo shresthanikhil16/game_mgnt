@@ -1,242 +1,167 @@
 import 'package:flutter/material.dart';
-import 'login_view.dart';  // Import LoginView
+import 'package:game_mgnt/view/login_view.dart';
 
 class SignUpView extends StatelessWidget {
   const SignUpView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
-    double imageHeight = screenHeight * 0.3;
-    if (screenWidth > screenHeight) {
-      imageHeight = screenHeight * 0.2; // Adjust image size for landscape
-    }
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              minHeight: screenHeight, // Ensure content takes up full screen height
+              minHeight: screenHeight,
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Container for the logo image
-                  SizedBox(
-                    height: imageHeight,
-                    width: double.infinity,
-                    child: Container(
-                      decoration: const BoxDecoration(
+            child: IntrinsicHeight(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 50),
+                    // Logo
+                    Image.asset(
+                      'assets/images/logo2.png', // Path to your logo image
+                      height: 100,
+                    ),
+                    const SizedBox(height: 20),
+                    // App Name
+                    const Text(
+                      'GuidEngine',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF990000), // Single color used here
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    // Sign Up Text
+                    const Text(
+                      'Create a New Account',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
                         color: Colors.black,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(20),
-                          bottomRight: Radius.circular(20),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Image.asset(
-                          'assets/images/logo.png', // Replace with your logo image path
-                          fit: BoxFit.contain,
-                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Sign Up title
-                  const Text(
-                    'Get Started!',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontFamily: 'Raleway',
+                    const SizedBox(height: 10),
+                    // Subtitle Text
+                    const Text(
+                      'Fill in the details below to get started',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Name TextField
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                    child: TextField(
+                    const SizedBox(height: 30),
+                    // Username Field
+                    TextField(
                       decoration: InputDecoration(
-                        labelText: 'Name',
-                        labelStyle: const TextStyle(fontFamily: 'Raleway'),
+                        prefixIcon: const Icon(Icons.person,
+                            color: Color(0xFF990000)),
+                        hintText: 'Enter Username',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Color(0xFF990000)),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Email TextField
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                    child: TextField(
+                    const SizedBox(height: 20),
+                    // Email Field
+                    TextField(
                       decoration: InputDecoration(
-                        labelText: 'Email',
-                        labelStyle: const TextStyle(fontFamily: 'Raleway'),
+                        prefixIcon: const Icon(Icons.email,
+                            color: Color(0xFF990000)),
+                        hintText: 'Enter Email Address',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Color(0xFF990000)),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Password TextField
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                    child: TextField(
+                    const SizedBox(height: 20),
+                    // Password Field
+                    TextField(
                       obscureText: true,
                       decoration: InputDecoration(
-                        labelText: 'Password',
-                        labelStyle: const TextStyle(fontFamily: 'Raleway'),
+                        prefixIcon: const Icon(Icons.lock,
+                            color: Color(0xFF990000)),
+                        hintText: 'Enter Password',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Color(0xFF990000)),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Sign Up button
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Handle sign-up button press
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF990000),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Raleway',
-                          ),
+                    const SizedBox(height: 20),
+                    // Re-enter Password Field
+                    TextField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.lock,
+                            color: Color(0xFF990000)),
+                        hintText: 'Re-enter Password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Color(0xFF990000)),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Divider and Sign Up options
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                    child: Column(
-                      children: [
-                        const Divider(
-                          color: Colors.grey,
-                          thickness: 1,
+                    const SizedBox(height: 30),
+                    // Sign Up Button
+                    ElevatedButton(
+                      onPressed: () {
+                        // Handle sign-up logic here
+                        Navigator.pop(context); // Navigate back to login after sign-up
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF990000), // Updated to match theme
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'Or Sign Up With',
-                          style: TextStyle(fontSize: 16, color: Colors.black, fontFamily: 'Raleway'),
-                        ),
-                        const SizedBox(height: 10),
-
-                        // Google and Facebook Buttons
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                // Handle Google sign-in
-                              },
-                              icon: Image.asset(
-                                'assets/icons/google.png', // Replace with your Google icon image path
-                                width: 20,
-                                height: 20,
-                              ),
-                              label: const Text(
-                                'Google',
-                                style: TextStyle(fontFamily: 'Raleway'),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: Colors.black,
-                                side: const BorderSide(color: Colors.grey),
-                              ),
-                            ),
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                // Handle Facebook sign-in
-                              },
-                              icon: Image.asset(
-                                'assets/icons/facebook.webp', // Replace with your Facebook icon image path
-                                width: 20,
-                                height: 20,
-                              ),
-                              label: const Text(
-                                'Facebook',
-                                style: TextStyle(fontFamily: 'Raleway'),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                                foregroundColor: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 100),
+                      ),
+                      child: const Text(
+                        'Sign Up',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Already have an account? Sign In option
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 45.0),
-                    child: Row(
+                    const SizedBox(height: 20),
+                    // Already have an account? Login
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
                           "Already have an account? ",
-                          style: TextStyle(fontSize: 16, color: Colors.black, fontFamily: 'Raleway'),
+                          style: TextStyle(color: Colors.grey),
                         ),
                         GestureDetector(
                           onTap: () {
-                            // Navigate to LoginView when tapped
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const LoginView()),
-                            );
+                              MaterialPageRoute(
+                                builder: (context) => const LoginView(),
+                              ),
+                            ); // Navigate back to login screen
                           },
                           child: const Text(
-                            'Sign In',
+                            'Log In',
                             style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.red, // Changed to red
+                              color: Color(0xFF990000),
+                              fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
-                              fontFamily: 'Raleway',
                             ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
