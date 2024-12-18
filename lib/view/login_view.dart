@@ -58,11 +58,13 @@ class LoginView extends StatelessWidget {
                     // Username Field
                     TextField(
                       decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.person, color: Color(0xFF990000)),
+                        prefixIcon:
+                            const Icon(Icons.person, color: Color(0xFF990000)),
                         hintText: 'Enter Username',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Color(0xFF990000)),
+                          borderSide:
+                              const BorderSide(color: Color(0xFF990000)),
                         ),
                       ),
                     ),
@@ -71,11 +73,13 @@ class LoginView extends StatelessWidget {
                     TextField(
                       obscureText: true,
                       decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.lock, color: Color(0xFF990000)),
+                        prefixIcon:
+                            const Icon(Icons.lock, color: Color(0xFF990000)),
                         hintText: 'Enter Password',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Color(0xFF990000)),
+                          borderSide:
+                              const BorderSide(color: Color(0xFF990000)),
                         ),
                       ),
                     ),
@@ -109,7 +113,8 @@ class LoginView extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 100),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 100),
                       ),
                       child: const Text(
                         'Log In',
