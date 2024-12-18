@@ -2,146 +2,162 @@ import 'package:flutter/material.dart';
 import 'package:game_mgnt/view/login_view.dart';
 import 'package:game_mgnt/view/signup_view.dart';
 
-class GetStartedView extends StatelessWidget {
+class GetStartedView extends StatefulWidget {
   const GetStartedView({super.key});
+
+  @override
+  State<GetStartedView> createState() => _GetStartedViewState();
+}
+
+class _GetStartedViewState extends State<GetStartedView> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  final List<Map<String, dynamic>> _pages = [
+    {
+      'imagePath': 'assets/images/logo3.png',
+      'title': 'Welcome!',
+      'subtitle': 'Join the Community',
+      'gradientColors': [const Color(0xFF990000), const Color(0xFF4B0000)],
+    },
+    {
+      'imagePath': 'assets/images/logo3.png',
+      'title': 'Explore Games',
+      'subtitle': 'Find and manage your favorite games',
+      'gradientColors': [const Color(0xFF4B0000), const Color(0xFF990000)],
+    },
+    {
+      'imagePath': 'assets/images/logo3.png',
+      'title': 'Stay Connected',
+      'subtitle': 'Connect with players globally',
+      'gradientColors': [const Color(0xFF990000), const Color(0xFF4B0000)],
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
+    final bool isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Hero Section
-                Container(
-                  height: screenHeight * 0.6, // 60% of screen height
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Color(0xFF990000), Color(0xFF4B0000)],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Hero Section with dynamic height
+              SizedBox(
+                height: isPortrait ? screenHeight * 0.55 : screenHeight * 0.4,
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: _pages.length,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentPage = index;
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    final page = _pages[index];
+                    return SwipablePage(
+                      imagePath: page['imagePath'],
+                      title: page['title'],
+                      subtitle: page['subtitle'],
+                      gradientColors: page['gradientColors'],
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Dots Indicator
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  _pages.length,
+                  (index) => Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 5),
+                    width: _currentPage == index ? 12 : 8,
+                    height: _currentPage == index ? 12 : 8,
+                    decoration: BoxDecoration(
+                      color: _currentPage == index
+                          ? const Color(0xFF990000)
+                          : Colors.grey[300],
+                      shape: BoxShape.circle,
                     ),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(40),
-                      bottomRight: Radius.circular(40),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/images/logo3.png',
-                        height: screenHeight * 0.3, // Adjust for proportion
-                        fit: BoxFit.contain,
-                      ),
-                      const SizedBox(height: 20),
-                      const Text(
-                        'Welcome!',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontFamily: 'Raleway',
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      const Text(
-                        'Join the Community',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white70,
-                          fontFamily: 'Raleway',
-                        ),
-                      ),
-                    ],
                   ),
                 ),
-                const SizedBox(height: 30),
-      
-                // Call-to-Action Section
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ElevatedButton(
+              ),
+              const SizedBox(height: 20),
+
+              // Call-to-Action Section
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isPortrait ? 20 : screenWidth * 0.3,
+                ),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignUpView()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    elevation: 5,
+                    backgroundColor: const Color(0xFF990000),
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text(
+                    'Get Started',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              // Footer Section: Login link
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Already have an account? ',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontFamily: 'Raleway',
+                    ),
+                  ),
+                  TextButton(
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const SignUpView()),
+                        MaterialPageRoute(
+                            builder: (context) => const LoginView()),
                       );
                     },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      elevation: 5,
-                      backgroundColor: const Color(0xFF990000),
-                      foregroundColor: Colors.white,
-                    ),
                     child: const Text(
-                      'Get Started',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-      
-                // Divider Section
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Divider(
-                    color: Colors.grey,
-                    thickness: 1,
-                  ),
-                ),
-                const SizedBox(height: 20),
-      
-                // Footer Section: Login link
-                const SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Already have an account? ',
+                      'Login',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.black54,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF990000),
                         fontFamily: 'Raleway',
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        // Navigate to the Login page
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const LoginView()),
-                        );
-                      },
-                      child: const Text(
-                        'Login',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF990000),
-                          fontFamily: 'Raleway',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -149,39 +165,65 @@ class GetStartedView extends StatelessWidget {
   }
 }
 
-// A reusable widget for feature tiles
-class FeatureTile extends StatelessWidget {
-  final String icon;
+/// Swipable Page Widget
+class SwipablePage extends StatelessWidget {
+  final String imagePath;
   final String title;
+  final String subtitle;
+  final List<Color> gradientColors;
 
-  const FeatureTile({required this.icon, required this.title, super.key});
+  const SwipablePage({
+    required this.imagePath,
+    required this.title,
+    required this.subtitle,
+    required this.gradientColors,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(15),
-          decoration: const BoxDecoration(
-            color: Colors.black12,
-            shape: BoxShape.circle,
-          ),
-          child: Image.asset(
-            icon,
-            height: 40,
-            width: 40,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: gradientColors,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
-        const SizedBox(height: 10),
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Raleway',
-          ),
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(40),
+          bottomRight: Radius.circular(40),
         ),
-      ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            imagePath,
+            height: MediaQuery.of(context).size.height * 0.25,
+            fit: BoxFit.contain,
+          ),
+          const SizedBox(height: 20),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: 'Raleway',
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            subtitle,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: Colors.white70,
+              fontFamily: 'Raleway',
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
