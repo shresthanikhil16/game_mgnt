@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:game_mgnt/view/about_view.dart';
 import 'package:game_mgnt/view/comments_view.dart';
 import 'package:game_mgnt/view/contact_view.dart';
+import 'package:game_mgnt/view/games_view.dart';
 import 'package:game_mgnt/view/history_view.dart';
 import 'package:game_mgnt/view/matchup_vew.dart';
 import 'package:game_mgnt/view/profile_view.dart';
@@ -19,7 +20,7 @@ class DashboardView extends StatelessWidget {
         'title': 'Games',
         'icon': CupertinoIcons.game_controller_solid,
         'color': Colors.deepOrange,
-        'page': MatchupView(), // Example navigation to MatchupView
+        'page': GamesView(), // Example navigation to MatchupView
       },
       {
         'title': 'History',
