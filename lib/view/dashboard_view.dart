@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:game_mgnt/core/common/my_card_view.dart';
 import 'package:game_mgnt/view/about_view.dart';
 import 'package:game_mgnt/view/comments_view.dart';
 import 'package:game_mgnt/view/contact_view.dart';
@@ -9,80 +10,69 @@ import 'package:game_mgnt/view/matchup_vew.dart';
 import 'package:game_mgnt/view/profile_view.dart';
 import 'package:game_mgnt/view/registered_view.dart';
 
-class DashboardView extends StatelessWidget {
+class DashboardView extends StatefulWidget {
   const DashboardView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // List of dashboard items
-    final dashboardItems = [
-      {
-        'title': 'Games',
-        'icon': CupertinoIcons.game_controller_solid,
-        'color': Colors.deepOrange,
-        'page': GamesView(), // Example navigation to MatchupView
-      },
-      {
-        'title': 'History',
-        'icon': CupertinoIcons.time_solid,
-        'color': Colors.green,
-        'page': const HistoryView(), // Example navigation to HistoryView
-      },
-      {
-        'title': 'Registered',
-        'icon': CupertinoIcons.doc_person_fill,
-        'color': Colors.redAccent,
-        'isGradient': true,
-        'page': const RegisteredView(), // Example navigation to RegisteredView
-      },
-      {
-        'title': 'Profile',
-        'icon': CupertinoIcons.person_crop_circle,
-        'color': Colors.teal,
-        'page': const ProfileView(), // Navigation to ProfileView
-      },
-      {
-        'title': 'Comments',
-        'icon': CupertinoIcons.chat_bubble_2,
-        'color': Colors.brown,
-        'page': const CommentsView(), // Navigation to CommentsView
-      },
-      {
-        'title': 'MatchUps',
-        'icon': CupertinoIcons.graph_circle,
-        'color': Colors.indigo,
-        'page': MatchupView(), // Navigation to MatchupView
-      },
-      {
-        'title': 'About',
-        'icon': CupertinoIcons.question_circle,
-        'color': Colors.blue,
-        'page': const AboutView(), // Navigation to AboutView
-      },
-      {
-        'title': 'Contact',
-        'icon': CupertinoIcons.phone,
-        'color': Colors.pinkAccent,
-        'page': const ContactView(), // Navigation to ContactView
-      },
-    ];
+  _DashboardViewState createState() => _DashboardViewState();
+}
 
+class _DashboardViewState extends State<DashboardView> {
+  int _selectedIndex = 0; // Track the selected index for the bottom navigation
+
+  // List of pages/screens for the navigation
+  final List<Widget> _pages = [
+    const DashboardScreen(), // Use DashboardScreen as the home screen
+    const ProfileView(),
+    const CommentsView(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            // Header Section
-            _buildHeader(context),
-            // Dashboard Grid
-            _buildDashboardGrid(context, dashboardItems),
+        body: _pages[_selectedIndex], // Display selected page
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.person),
+              label: 'Profile',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.chat_bubble_2),
+              label: 'Comments',
+            ),
           ],
         ),
       ),
     );
   }
+}
 
-  /// Builds the header with a gradient background
+class DashboardScreen extends StatelessWidget {
+  const DashboardScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        _buildHeader(context),
+        _buildDashboardGrid(context),
+      ],
+    );
+  }
+
   Widget _buildHeader(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
@@ -125,102 +115,78 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  /// Builds the dashboard grid
-  Widget _buildDashboardGrid(
-      BuildContext context, List<Map<String, dynamic>> items) {
-    return Container(
-      color: const Color(0xFF990000),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(200),
-          ),
-        ),
-        child: GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 40,
-            mainAxisSpacing: 30,
-          ),
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            final item = items[index];
-            return _buildDashboardItem(
-              context,
-              title: item['title'],
-              icon: item['icon'],
-              color: item['color'],
-              isGradient: item['isGradient'] ?? false,
-              page: item['page'],
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  /// Reusable dashboard item widget with navigation
-  Widget _buildDashboardItem(
-    BuildContext context, {
-    required String title,
-    required IconData icon,
-    required Color color,
-    bool isGradient = false,
-    required Widget page,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        // Navigate to the respective page
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => page),
-        );
+  Widget _buildDashboardGrid(BuildContext context) {
+    final dashboardItems = [
+      {
+        'title': 'Games',
+        'icon': CupertinoIcons.game_controller_solid,
+        'color': Colors.deepOrange, // Ensure it's a valid Color type
+        'page': const GamesView(),
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              offset: const Offset(0, 5),
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 2,
-              blurRadius: 5,
-            ),
-          ],
+      {
+        'title': 'History',
+        'icon': CupertinoIcons.time_solid,
+        'color': Colors.green, // Ensure it's a valid Color type
+        'page': const HistoryView(),
+      },
+      {
+        'title': 'Registered',
+        'icon': CupertinoIcons.doc_person_fill,
+        'color': Colors.redAccent, // Ensure it's a valid Color type
+        'page': const RegisteredView(),
+      },
+      {
+        'title': 'Profile',
+        'icon': CupertinoIcons.person_crop_circle,
+        'color': Colors.teal, // Ensure it's a valid Color type
+        'page': const ProfileView(),
+      },
+      {
+        'title': 'Comments',
+        'icon': CupertinoIcons.chat_bubble_2,
+        'color': Colors.brown, // Ensure it's a valid Color type
+        'page': const CommentsView(),
+      },
+      {
+        'title': 'MatchUps',
+        'icon': CupertinoIcons.graph_circle,
+        'color': Colors.indigo, // Ensure it's a valid Color type
+        'page': MatchupView(),
+      },
+      {
+        'title': 'About',
+        'icon': CupertinoIcons.question_circle,
+        'color': Colors.blue, // Ensure it's a valid Color type
+        'page': const AboutView(),
+      },
+      {
+        'title': 'Contact',
+        'icon': CupertinoIcons.phone,
+        'color': Colors.pinkAccent, // Ensure it's a valid Color type
+        'page': const ContactView(),
+      },
+    ];
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: isGradient
-                    ? const LinearGradient(
-                        colors: [Colors.redAccent, Colors.deepOrange],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      )
-                    : null,
-                color: isGradient ? null : color,
-              ),
-              child: Icon(icon, color: Colors.white, size: 28),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              title.toUpperCase(),
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
+        itemCount: dashboardItems.length,
+        itemBuilder: (context, index) {
+          final item = dashboardItems[index];
+          return MyCardView(
+            label: item['title'] as String, // Explicitly casting to String
+            icon: item['icon'] as IconData, // Explicitly casting to IconData
+            color: item['color'] as Color, // Explicitly casting to Color
+            page: item['page'] as Widget, // Explicitly casting to Widget
+          );
+        },
       ),
     );
   }
