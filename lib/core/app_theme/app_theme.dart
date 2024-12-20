@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 ThemeData getApplicationTheme() {
   return ThemeData(
-      primarySwatch: Colors.orange,
-      scaffoldBackgroundColor: Colors.grey[200],
+      primarySwatch: Colors.red,
+      scaffoldBackgroundColor: Colors.white,
       fontFamily: 'Raleway',
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -21,5 +21,5 @@ ThemeData getApplicationTheme() {
           elevation: 4,
           shadowColor: Colors.white,
           titleTextStyle: TextStyle(
-              fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold)));
+              fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold)));
 }
