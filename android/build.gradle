@@ -1,14 +1,27 @@
+buildscript {
+    repositories {
+        google()     // Google's Maven repository
+        mavenCentral() // Central Maven repository
+    }
+    dependencies {
+        // Add the correct classpath for AGP version 8.2.1
+        classpath 'com.android.tools.build:gradle:8.2.1'  // Ensure this is inside 'dependencies' block
+    }
+}
+
 allprojects {
     repositories {
-        google()
-        mavenCentral()
+        google()     // Google's Maven repository
+        mavenCentral() // Central Maven repository
     }
 }
 
 rootProject.buildDir = "../build"
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }
