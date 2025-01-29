@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:game_mgnt/features/auth/presentation/view_model/login/login_bloc.dart';
 
 import 'app/app.dart';
 import 'app/di/di.dart';
@@ -13,9 +12,6 @@ void main() async {
 
   // Initialize Dependencies
   await initDependencies();
-
-  // Check if LoginBloc is registered
-  print("Is LoginBloc registered: ${getIt.isRegistered<LoginBloc>()}");
 
   // Run the app
   runApp(App());

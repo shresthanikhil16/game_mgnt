@@ -1,232 +1,185 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_mgnt/core/common/snackbar/my_snackbar.dart';
+import 'package:game_mgnt/features/auth/presentation/view/login_view.dart';
+import 'package:game_mgnt/features/auth/presentation/view_model/signup/register_bloc.dart';
 
-import '../../../../core/network/hive_service.dart';
-import '../../data/model/auth_hive_model.dart';
-import 'login_view.dart'; // Import the model
+class RegisterView extends StatelessWidget {
+  RegisterView({super.key});
 
-class RegisterView extends StatefulWidget {
-  const RegisterView({super.key});
-
-  @override
-  _RegisterViewState createState() => _RegisterViewState();
-}
-
-class _RegisterViewState extends State<RegisterView> {
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
-
-  final FocusNode usernameFocusNode = FocusNode();
-  final FocusNode emailFocusNode = FocusNode();
-  final FocusNode passwordFocusNode = FocusNode();
-  final FocusNode confirmPasswordFocusNode = FocusNode();
-
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  @override
-  void dispose() {
-    usernameFocusNode.dispose();
-    emailFocusNode.dispose();
-    passwordFocusNode.dispose();
-    confirmPasswordFocusNode.dispose();
-    super.dispose();
-  }
+  final formKey = GlobalKey<FormState>();
+  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: screenHeight),
-            child: IntrinsicHeight(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 50),
-                      Image.asset(
-                        'assets/images/logo2.png',
-                        height: 100,
-                      ),
-                      const SizedBox(height: 20),
-                      const Text(
-                        'GuidEngine',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF990000),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints:
+              BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+          child: IntrinsicHeight(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 50),
+                  // Logo
+                  Image.asset('assets/images/logo2.png', height: 100),
+                  const SizedBox(height: 20),
+                  // App Name
+                  const Text(
+                    'GuidEngine',
+                    style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF990000)),
+                  ),
+                  const SizedBox(height: 20),
+                  // Sign Up Text
+                  const Text(
+                    'Create a New Account',
+                    style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                  const SizedBox(height: 10),
+                  // Subtitle Text
+                  const Text(
+                    'Fill in the details below to get started',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 30),
+                  // Form
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Username Field
+                        _buildTextField(context,
+                            controller: usernameController, label: 'Username'),
+                        const SizedBox(height: 20),
+                        // Email Field
+                        _buildTextField(context,
+                            controller: emailController, label: 'Email'),
+                        const SizedBox(height: 20),
+                        // Password Field
+                        _buildTextField(context,
+                            controller: passwordController,
+                            label: 'Password',
+                            obscureText: true),
+                        const SizedBox(height: 20),
+                        // Confirm Password Field
+                        _buildTextField(
+                          context,
+                          controller: confirmPasswordController,
+                          label: 'Re-enter Password',
+                          obscureText: true,
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      const Text(
-                        'Create a New Account',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      const Text(
-                        'Fill in the details below to get started',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(height: 30),
-                      _buildTextField(
-                        context,
-                        controller: usernameController,
-                        label: 'Username',
-                        focusNode: usernameFocusNode,
-                      ),
-                      const SizedBox(height: 20),
-                      _buildTextField(
-                        context,
-                        controller: emailController,
-                        label: 'Email',
-                        focusNode: emailFocusNode,
-                      ),
-                      const SizedBox(height: 20),
-                      _buildTextField(
-                        context,
-                        controller: passwordController,
-                        label: 'Password',
-                        obscureText: true,
-                        focusNode: passwordFocusNode,
-                      ),
-                      const SizedBox(height: 20),
-                      _buildTextField(
-                        context,
-                        controller: confirmPasswordController,
-                        label: 'Re-enter Password',
-                        obscureText: true,
-                        focusNode: confirmPasswordFocusNode,
-                      ),
-                      const SizedBox(height: 30),
-                      ElevatedButton(
-                        onPressed: () async {
-                          if (formKey.currentState?.validate() ?? false) {
-                            final username = usernameController.text.trim();
-                            final email = emailController.text.trim();
-                            final password = passwordController.text.trim();
-                            final confirmPassword =
-                                confirmPasswordController.text.trim();
-
-                            if (password == confirmPassword) {
-                              // Create AuthHiveModel instance
-                              final authModel = AuthHiveModel(
-                                studentId:
-                                    email, // Assuming the email is unique and used as ID
-                                username: username,
-                                email: email,
-                                password: password, confirmPassword: '',
-                              );
-
-                              try {
-                                final hiveService =
-                                    HiveService(); // Create an instance of HiveService
-                                await hiveService.register(
-                                    authModel); // Call instance method
-
-                                // Show success snackbar
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Registration Successful'),
-                                    backgroundColor: Colors.green,
-                                  ),
-                                );
-
-                                // Navigate to the login screen or home
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const LoginView(),
-                                  ),
-                                );
-                              } catch (e) {
-                                // Handle registration error
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Registration Failed: $e'),
-                                    backgroundColor: Colors.red,
-                                  ),
+                        const SizedBox(height: 30),
+                        // Sign Up Button
+                        ElevatedButton(
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              if (passwordController.text ==
+                                  confirmPasswordController.text) {
+                                context.read<RegisterBloc>().add(
+                                      RegisterStudent(
+                                        context: context,
+                                        username: usernameController.text,
+                                        email: emailController.text,
+                                        password: passwordController.text,
+                                        confirmPassword:
+                                            confirmPasswordController.text,
+                                      ),
+                                    );
+                              } else {
+                                showMySnackBar(
+                                  context: context,
+                                  message: "Passwords do not match",
+                                  color: Colors.red,
                                 );
                               }
-                            } else {
-                              // Show password mismatch error
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Passwords do not match'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
                             }
-                          } else {
-                            // Show validation error
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Please fill in all fields'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF990000),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF990000),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 100),
                           ),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 15, horizontal: 100),
+                          child: const Text('Sign Up',
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white)),
                         ),
-                        child: const Text(
-                          'Sign Up',
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Already have an account? ",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginView(),
+                        const SizedBox(height: 20),
+                        // Already have an account? Login
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Already have an account? ",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginView()),
+                                );
+                              },
+                              child: const Text(
+                                'Log In',
+                                style: TextStyle(
+                                  color: Color(0xFF990000),
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration.underline,
                                 ),
-                              );
-                            },
-                            child: const Text(
-                              'Log In',
-                              style: TextStyle(
-                                color: Color(0xFF990000),
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                  // Listen to RegisterBloc state
+                  BlocListener<RegisterBloc, RegisterState>(
+                    listener: (context, state) {
+                      if (state.isSuccess) {
+                        showMySnackBar(
+                          context: context,
+                          message: "Registration Successful",
+                          color: Colors.green,
+                        );
+
+                        Future.delayed(const Duration(seconds: 2), () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginView()),
+                          );
+                        });
+                      } else if (state.isLoading) {
+                        showMySnackBar(
+                          context: context,
+                          message: "Registering...",
+                          color: Colors.blueAccent,
+                        );
+                      }
+                    },
+                    child: Container(),
+                  ),
+                ],
               ),
             ),
           ),
@@ -238,33 +191,33 @@ class _RegisterViewState extends State<RegisterView> {
   Widget _buildTextField(BuildContext context,
       {required TextEditingController controller,
       required String label,
-      bool obscureText = false,
-      required FocusNode focusNode}) {
-    return SizedBox(
-      height: 35,
-      child: TextFormField(
-        controller: controller,
-        focusNode: focusNode,
-        obscureText: obscureText,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return '$label cannot be empty';
-          }
-          if (label == 'Email' && !RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-            return 'Please enter a valid email';
-          }
-          return null;
-        },
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: GoogleFonts.montserrat(
-            color: Colors.black,
-          ),
-          filled: true,
-          fillColor: Colors.white.withOpacity(0.4),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(17),
-          ),
+      bool obscureText = false}) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscureText,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return '$label cannot be empty';
+        }
+        if (label == 'Email' && !RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+          return 'Please enter a valid email';
+        }
+        return null;
+      },
+      style: const TextStyle(color: Colors.black), // Added text color black
+      decoration: InputDecoration(
+        prefixIcon: Icon(
+          label == 'Username'
+              ? Icons.person
+              : label == 'Email'
+                  ? Icons.email
+                  : Icons.lock,
+          color: const Color(0xFF990000),
+        ),
+        hintText: 'Enter $label',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(color: Color(0xFF990000)),
         ),
       ),
     );

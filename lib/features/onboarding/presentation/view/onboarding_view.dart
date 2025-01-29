@@ -1,180 +1,235 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:game_mgnt/features/auth/presentation/view/login_view.dart';
-import 'package:game_mgnt/features/auth/presentation/view/register_view.dart';
-import 'package:game_mgnt/features/auth/presentation/view_model/login/login_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class GetStartedView extends StatefulWidget {
-  const GetStartedView({super.key});
+import '../../../auth/presentation/view/login_view.dart';
 
-  @override
-  State<GetStartedView> createState() => _GetStartedViewState();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const OnboardingView());
 }
 
-class _GetStartedViewState extends State<GetStartedView> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-
-  final List<Map<String, dynamic>> _pages = [
-    {
-      'imagePath': 'assets/images/logo3.png',
-      'title': 'Welcome!',
-      'subtitle': 'Join the Community',
-      'gradientColors': [Color(0xFF990000), Color(0xFF4B0000)],
-    },
-    {
-      'imagePath': 'assets/images/logo3.png',
-      'title': 'Explore Games',
-      'subtitle': 'Find and manage your favorite games',
-      'gradientColors': [Color(0xFF4B0000), Color(0xFF990000)],
-    },
-    {
-      'imagePath': 'assets/images/logo3.png',
-      'title': 'Stay Connected',
-      'subtitle': 'Connect with players globally',
-      'gradientColors': [Color(0xFF990000), Color(0xFF4B0000)],
-    },
-  ];
+class OnboardingView extends StatelessWidget {
+  const OnboardingView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
-          children: [
-            // Hero Section
-            Flexible(
-              flex: 4,
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: _pages.length,
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentPage = index;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  final page = _pages[index];
-                  return SwipablePage(
-                    imagePath: page['imagePath'],
-                    title: page['title'],
-                    subtitle: page['subtitle'],
-                    gradientColors: page['gradientColors'],
-                  );
-                },
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        textTheme: TextTheme(
+          displayLarge: GoogleFonts.montserrat(
+            fontWeight: FontWeight.w700,
+            fontSize: 41,
+            color: Colors.white,
+          ),
+          bodyLarge: GoogleFonts.montserrat(
+            fontWeight: FontWeight.w400,
+            fontSize: 12.5,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      home: const OnboardingScreen(),
+    );
+  }
+}
+
+class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({super.key});
+
+  @override
+  _OnboardingScreenState createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black, // Set background color to black
+      body: Stack(
+        children: [
+          PageView(
+            controller: _pageController,
+            scrollDirection: Axis.horizontal,
+            onPageChanged: (index) {
+              setState(() {
+                _currentPage = index;
+              });
+            },
+            children: const [
+              OnboardingPage(
+                title: 'Join the Community',
+                imagePath: 'assets/images/fortnite2.jpg',
+                titleFontSize: 27,
               ),
-            ),
-            // Dots Indicator
-            Row(
+              OnboardingPage(
+                title: 'Find and manage your favorite games',
+                imagePath: 'assets/images/mobilelegends.jpg',
+                titleFontSize: 28,
+              ),
+              OnboardingPage(
+                title: 'Connect with players globally',
+                imagePath: 'assets/images/valorant1.jpeg',
+                titleFontSize: 25.5,
+                showGetStartedButton: true,
+              ),
+            ],
+          ),
+          Positioned(
+            bottom: MediaQuery.of(context).size.height *
+                0.04, // Adjusted bottom spacing
+            left: 0,
+            right: 0,
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                _pages.length,
-                (index) => Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 5),
-                  width: _currentPage == index ? 12 : 8,
-                  height: _currentPage == index ? 12 : 8,
-                  decoration: BoxDecoration(
-                    color: _currentPage == index
-                        ? const Color(0xFF990000)
-                        : Colors.grey[300],
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            // CTA Section
-            Flexible(
-              flex: 2,
-              child: Column(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RegisterView(),
-                        ),
+              children: List.generate(3, (index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 6), // Smaller spacing
+                  child: GestureDetector(
+                    onTap: () {
+                      _pageController.animateToPage(
+                        index,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
                       );
                     },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      backgroundColor: const Color(0xFF990000),
-                      foregroundColor: Colors.white,
+                    child: CircleAvatar(
+                      radius: 5, // Smaller size
+                      backgroundColor: _currentPage == index
+                          ? const Color(0xFF8B0000) // Dark red
+                          : Colors.white.withOpacity(0.5),
                     ),
-                    child: const Text('Get Started'),
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Already have an account?'),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BlocProvider.value(
-                                value: BlocProvider.of<LoginBloc>(context),
-                                child: const LoginView(),
-                              ),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(color: Color(0xFF990000)),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                );
+              }),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class SwipablePage extends StatelessWidget {
-  final String imagePath;
+class OnboardingPage extends StatelessWidget {
   final String title;
-  final String subtitle;
-  final List<Color> gradientColors;
+  final String imagePath;
+  final double titleFontSize;
+  final bool showGetStartedButton;
 
-  const SwipablePage({
-    required this.imagePath,
-    required this.title,
-    required this.subtitle,
-    required this.gradientColors,
+  const OnboardingPage({
     super.key,
+    required this.title,
+    required this.imagePath,
+    required this.titleFontSize,
+    this.showGetStartedButton = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: gradientColors,
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+    final textTheme = Theme.of(context).textTheme;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return Stack(
+      children: [
+        Container(
+          height: screenHeight * 0.7,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(imagePath),
+              fit: BoxFit.cover,
+            ),
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(30),
+              bottomRight: Radius.circular(30),
+            ),
+          ),
         ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(imagePath, height: 150),
-          Text(title, style: TextStyle(fontSize: 28, color: Colors.white)),
-          Text(subtitle, style: TextStyle(fontSize: 18, color: Colors.white70)),
-        ],
-      ),
+        Positioned(
+          top: screenHeight * 0.77, // Lower the text more
+          left: 0,
+          right: 0,
+          child: Container(
+            height: screenHeight * 0.3,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black,
+                  Color(0xFF4B0000),
+                  Color(0xFF990000),
+                ],
+                stops: [
+                  0.0,
+                  0.7,
+                  1.0,
+                ],
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 40.0,
+                vertical: 7.0,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 22), // Adjust the spacing
+                  Text(
+                    title,
+                    style: textTheme.displayLarge!.copyWith(
+                      fontSize: titleFontSize,
+                    ),
+                  ),
+                  if (showGetStartedButton) ...[
+                    const SizedBox(height: 25), // Reduced spacing
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Transform.translate(
+                        offset: const Offset(-10, 0),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginView(),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white
+                                .withOpacity(0.3), // Set to transparent white
+                            fixedSize:
+                                const Size(178, 50), // Reduced button height
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(35),
+                            ),
+                            alignment: Alignment.centerLeft,
+                            padding: const EdgeInsets.symmetric(horizontal: 17),
+                          ),
+                          child: Text(
+                            'GET STARTED',
+                            style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18, // Reduced font size
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
