@@ -1,16 +1,8 @@
 import 'package:equatable/equatable.dart';
-<<<<<<< HEAD
-import 'package:hive/hive.dart';
-import 'package:uuid/uuid.dart';
-
-import '../../../../app/constants/hive_table_constant.dart';
-=======
 import 'package:game_mgnt/app/constants/hive_table_constant.dart';
+import 'package:game_mgnt/features/auth/domain/entity/auth_entity.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:uuid/uuid.dart';
-
->>>>>>> sprint_3
-import '../../domain/entity/auth_entity.dart';
 
 part 'auth_hive_model.g.dart';
 
