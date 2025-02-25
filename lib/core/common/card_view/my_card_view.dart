@@ -5,7 +5,7 @@ class MyCardView extends StatelessWidget {
   final Color color;
   final IconData icon;
   final bool isGradient;
-  final Widget page;
+  final Widget? page; // Make page nullable
 
   const MyCardView({
     super.key,
@@ -13,18 +13,20 @@ class MyCardView extends StatelessWidget {
     required this.color,
     required this.icon,
     this.isGradient = false,
-    required this.page,
+    this.page, // No longer required
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to the respective page
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => page),
-        );
+        if (page != null) {
+          // Navigate only if page is not null
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => page!),
+          );
+        }
       },
       child: Container(
         decoration: BoxDecoration(
