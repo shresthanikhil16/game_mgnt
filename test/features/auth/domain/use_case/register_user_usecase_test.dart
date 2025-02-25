@@ -23,10 +23,10 @@ void main() {
   });
 
   const registerParams = RegisterUserParams(
-    username: "prasta",
-    email: "prasta@gmail.com",
-    password: "prasta123",
-    confirmPassword: "prasta123",
+    username: "pratham",
+    email: "pratham@gmail.com",
+    password: "pratham123",
+    confirmPassword: "pratham123",
   );
 
   group('RegisterUseCase Tests', () {
@@ -48,9 +48,9 @@ void main() {
       // Arrange
       final invalidParams = RegisterUserParams(
         username: "",
-        email: "prasta@gmail.com",
-        password: "prasta123",
-        confirmPassword: "prasta123",
+        email: "pratham@gmail.com",
+        password: "pratham123",
+        confirmPassword: "pratham123",
       );
 
       when(() => repository.registerStudent(any())).thenAnswer((_) async =>
@@ -98,8 +98,8 @@ void main() {
       // Arrange
       final mismatchedParams = RegisterUserParams(
         username: "prasta",
-        email: "prasta@gmail.com",
-        password: "prasta123",
+        email: "pratham@gmail.com",
+        password: "pratham123",
         confirmPassword: "differentPassword",
       );
 
