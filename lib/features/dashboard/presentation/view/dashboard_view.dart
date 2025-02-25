@@ -9,8 +9,7 @@ class DashboardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body:
-            const DashboardScreen(), // Only show the DashboardScreen without bottom navigation
+        body: const DashboardScreen(),
       ),
     );
   }
@@ -21,12 +20,14 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.zero,
-      children: [
-        _buildHeader(context),
-        _buildDashboardGrid(context),
-      ],
+    return SingleChildScrollView(
+      // Wrap entire content in SingleChildScrollView
+      child: Column(
+        children: [
+          _buildHeader(context),
+          _buildDashboardGrid(context),
+        ],
+      ),
     );
   }
 
@@ -78,49 +79,49 @@ class DashboardScreen extends StatelessWidget {
         'title': 'Games',
         'icon': CupertinoIcons.game_controller_solid,
         'color': Colors.deepOrange,
-        // 'page': const GamesView(),
+        'page': const Placeholder(), // Replace with actual page
       },
       {
         'title': 'History',
         'icon': CupertinoIcons.time_solid,
         'color': Colors.green,
-        // 'page': const HistoryView(),
+        'page': const Placeholder(), // Replace with actual page
       },
       {
         'title': 'Registered',
         'icon': CupertinoIcons.doc_person_fill,
         'color': Colors.redAccent,
-        // 'page': const RegisteredView(),
+        'page': const Placeholder(), // Replace with actual page
       },
       {
         'title': 'Profile',
         'icon': CupertinoIcons.person_crop_circle,
         'color': Colors.teal,
-        // 'page': const ProfileView(),
+        'page': const Placeholder(), // Replace with actual page
       },
       {
         'title': 'Comments',
         'icon': CupertinoIcons.chat_bubble_2,
         'color': Colors.brown,
-        // 'page': const CommentsView(),
+        'page': const Placeholder(), // Replace with actual page
       },
       {
         'title': 'MatchUps',
         'icon': CupertinoIcons.graph_circle,
         'color': Colors.indigo,
-        // 'page': const MatchupView(),
+        'page': const Placeholder(), // Replace with actual page
       },
       {
         'title': 'About',
         'icon': CupertinoIcons.question_circle,
         'color': Colors.blue,
-        // 'page': const AboutView(),
+        'page': Container(), // Avoid passing `null`
       },
       {
         'title': 'Contact',
         'icon': CupertinoIcons.phone,
         'color': Colors.pinkAccent,
-        // 'page': const ContactView(),
+        'page': Container(), // Avoid passing `null`
       },
     ];
 
@@ -141,7 +142,7 @@ class DashboardScreen extends StatelessWidget {
             label: item['title'] as String,
             icon: item['icon'] as IconData,
             color: item['color'] as Color,
-            page: item['page'] as Widget,
+            page: item['page'] as Widget?, // Safe cast with nullable type
           );
         },
       ),
