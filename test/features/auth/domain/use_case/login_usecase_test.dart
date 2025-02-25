@@ -19,7 +19,7 @@ void main() {
   });
 
   const loginData = LoginParams(
-    email: "pratham",
+    email: "pratham@gmail.com",
     password: "pratham123",
   );
 
