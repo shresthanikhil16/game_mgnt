@@ -45,7 +45,7 @@ class AuthRemoteDataSource implements IAuthDataSource {
       Response response = await _dio.post(ApiEndpoints.register, data: {
         "username": student.username,
         "email": student.email,
-        "image": student.image,
+        "profilePicture": student.profilePicture,
         "password": student.password,
         "confirmPassword": student.confirmPassword,
       });
