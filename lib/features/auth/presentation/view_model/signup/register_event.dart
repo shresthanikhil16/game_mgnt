@@ -19,7 +19,7 @@ class RegisterStudent extends RegisterEvent {
   final BuildContext context;
   final String username;
   final String email;
-  final String? image;
+  final String? profilePicture;
   final String password;
   final String confirmPassword;
 
@@ -27,7 +27,7 @@ class RegisterStudent extends RegisterEvent {
     required this.context,
     required this.username,
     required this.email,
-    this.image,
+    this.profilePicture,
     required this.password,
     required this.confirmPassword,
   });
