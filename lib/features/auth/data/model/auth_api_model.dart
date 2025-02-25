@@ -9,7 +9,7 @@ class AuthApiModel extends Equatable {
   @JsonKey(name: '_id')
   final String? id;
   final String username;
-  final String? image;
+  final String? profilePicture;
   final String email;
   final String? password;
   final String confirmPassword;
@@ -17,7 +17,7 @@ class AuthApiModel extends Equatable {
   const AuthApiModel({
     this.id,
     required this.username,
-    required this.image,
+    required this.profilePicture,
     required this.email,
     required this.password,
     required this.confirmPassword,
@@ -44,7 +44,7 @@ class AuthApiModel extends Equatable {
     return AuthApiModel(
       username: entity.username,
       email: entity.email,
-      image: entity.image,
+      profilePicture: entity.profilePicture,
       password: entity.password,
       confirmPassword: entity.confirmPassword,
     );
