@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_mgnt/features/dashboard/presentation/view_model/dashboard_cubit.dart';
 
 class MyCardView extends StatelessWidget {
   final String label;
   final Color color;
   final IconData icon;
   final bool isGradient;
-  final Widget? page; // Make page nullable
+  final String? navigationTarget;
+  final Widget? page;
 
   const MyCardView({
     super.key,
@@ -13,15 +16,19 @@ class MyCardView extends StatelessWidget {
     required this.color,
     required this.icon,
     this.isGradient = false,
-    this.page, // No longer required
+    this.navigationTarget,
+    this.page,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (page != null) {
-          // Navigate only if page is not null
+        if (navigationTarget == 'Games') {
+          // Trigger navigation using the Cubit method for "Games"
+          context.read<DashboardCubit>().navigateToTournamentCreation(context);
+        } else if (page != null) {
+          // If there's a specific page, navigate to it
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => page!),
