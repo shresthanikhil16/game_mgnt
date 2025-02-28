@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_mgnt/features/tournament_creation/presentation/view/tournament_creation_view.dart';
 
 import '../../../../app/di/di.dart';
 import '../../../auth/presentation/view/login_view.dart';
@@ -28,5 +29,16 @@ class DashboardCubit extends Cubit<DashboardState> {
         );
       }
     });
+  }
+
+  // New method for navigating to TournamentCreationView
+  void navigateToTournamentCreation(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            const CreateTournamentView(), // Change to TournamentCreationView
+      ),
+    );
   }
 }
