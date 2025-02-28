@@ -3,11 +3,8 @@ class ApiEndpoints {
 
   static const Duration connectionTimeout = Duration(seconds: 1000);
   static const Duration receiveTimeout = Duration(seconds: 1000);
-  static const String baseUrl = "http://10.0.2.2:3000/api/v1/";
-  // For iPhone
-  //static const String baseUrl = "http://localhost:3000/api/v1/";
+  static const String baseUrl = "http://10.0.2.2:3000/api/";
 
-  // ====================== Auth Routes ======================
   static const String login = "auth/login";
   static const String register = "auth/register";
   static const String getAllStudent = "auth/getAllStudents";
@@ -15,4 +12,17 @@ class ApiEndpoints {
   static const String deleteStudent = "auth/deleteStudent/";
   static const String imageUrl = "http://10.0.2.2:3000/uploads/";
   static const String uploadImage = "auth/uploadImage";
+
+  static const String createTournament = "tournaments/registerGames";
+  static const String getTournamentsByGame = "tournaments/";
+  static const String getTournamentNamesByGame = "tournaments/names/";
+  static const String getGameList = "games/games";
+  static const String getGameNamesList = "gamesname";
+  static const String getAllGameNames = "games/allnames"; // New endpoint
+
+  static const String registerPlayer = "player/registerPlayer";
+  static const String getRegisteredPlayers = "player/registered";
+
+  static const String getMatchups = "matchups/matchup";
+  static const String getUniqueTournaments = "matchups/tournaments";
 }
