@@ -25,4 +25,10 @@ class ApiEndpoints {
 
   static const String getMatchups = "matchups/matchup";
   static const String getUniqueTournaments = "matchups/tournaments";
+
+  // History Endpoints
+  static const String getWinners = "winners/winners";
+
+  // Profile Endpoints
+  static const String getMe = "auth/getMe"; // Add this line
 }

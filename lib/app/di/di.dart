@@ -12,6 +12,11 @@ import 'package:game_mgnt/features/auth/domain/use_case/upload_image_usecase.dar
 import 'package:game_mgnt/features/auth/presentation/view_model/login/login_bloc.dart';
 import 'package:game_mgnt/features/auth/presentation/view_model/signup/register_bloc.dart';
 import 'package:game_mgnt/features/dashboard/presentation/view_model/dashboard_cubit.dart';
+import 'package:game_mgnt/features/history/data/data_source/remote_data_source/history_remote_data_source.dart';
+import 'package:game_mgnt/features/history/data/repository/history_repository_remote.dart';
+import 'package:game_mgnt/features/history/domain/repository/history_repository.dart';
+import 'package:game_mgnt/features/history/domain/use_case/history_get_winners_usecase.dart';
+import 'package:game_mgnt/features/history/presentation/view_model/history_bloc.dart';
 import 'package:game_mgnt/features/match_register/data/data_source/remote_data_source/tournament_reg_remote_data_source.dart';
 import 'package:game_mgnt/features/match_register/data/repository/tournament_reg_remote_repository.dart';
 import 'package:game_mgnt/features/match_register/domain/use_case/usecase.dart';
@@ -21,6 +26,11 @@ import 'package:game_mgnt/features/matchup/data/repository/matchups_remote_repos
 import 'package:game_mgnt/features/matchup/domain/repository/matchups_repository.dart';
 import 'package:game_mgnt/features/matchup/domain/use_case/matchups_usecase.dart';
 import 'package:game_mgnt/features/matchup/presentation/view_model/matchups_bloc.dart';
+import 'package:game_mgnt/features/profile/data/data_source/remote_data_source.dart/profile_remote_data_source.dart';
+import 'package:game_mgnt/features/profile/data/repository/profile_remote_repository.dart';
+import 'package:game_mgnt/features/profile/domain/repository/profile_repository.dart';
+import 'package:game_mgnt/features/profile/domain/use_case/get_profile_usecase.dart';
+import 'package:game_mgnt/features/profile/presentation/view_model/profile_bloc.dart';
 import 'package:game_mgnt/features/tournament_creation/data/data_source/remote_data_source.dart/tournament_creation_remote_data_source.dart';
 import 'package:game_mgnt/features/tournament_creation/data/repository/tournament_creation_remote_repository.dart';
 import 'package:game_mgnt/features/tournament_creation/domain/use_case/get_tournament_usecase.dart';
@@ -41,6 +51,8 @@ Future<void> initDependencies() async {
   _initTournamentDependencies();
   _initTournamentRegistrationDependencies();
   _initMatchupDependencies();
+  _initHistoryDependencies();
+  _initProfileDependencies(); // Add this line
 }
 
 Future<void> _initSharedPreferences() async {
@@ -157,7 +169,7 @@ void _initTournamentRegistrationDependencies() {
   getIt.registerLazySingleton<GetTournamentNamesUseCase>(
     () => GetTournamentNamesUseCase(getIt<TournamentRegistrationRepository>()),
   );
-  // Add the new use case registration
+
   getIt.registerLazySingleton<GetAllGameNamesUseCase>(
     () => GetAllGameNamesUseCase(getIt<TournamentRegistrationRepository>()),
   );
@@ -195,5 +207,43 @@ void _initMatchupDependencies() {
       getMatchupsUseCase: getIt<GetMatchupsUseCase>(),
       getUniqueTournamentsUseCase: getIt<GetUniqueTournamentsUseCase>(),
     ),
+  );
+}
+
+// =========================== History ===========================
+void _initHistoryDependencies() {
+  getIt.registerLazySingleton<HistoryRemoteDataSource>(
+    () => HistoryRemoteDataSource(dio: getIt<Dio>()),
+  );
+
+  getIt.registerLazySingleton<HistoryRepository>(
+    () => HistoryRepositoryImpl(remoteDataSource: getIt()),
+  );
+
+  getIt.registerLazySingleton<GetWinnersUseCase>(
+    () => GetWinnersUseCase(repository: getIt()),
+  );
+
+  getIt.registerFactory<HistoryBloc>(
+    () => HistoryBloc(getWinnersUseCase: getIt()),
+  );
+}
+
+// =========================== Profile ===========================
+void _initProfileDependencies() {
+  getIt.registerLazySingleton<ProfileRemoteDataSource>(
+    () => ProfileRemoteDataSource(dio: getIt<Dio>()),
+  );
+
+  getIt.registerLazySingleton<ProfileRepository>(
+    () => ProfileRemoteRepository(remoteDataSource: getIt()),
+  );
+
+  getIt.registerLazySingleton<GetProfileUseCase>(
+    () => GetProfileUseCase(repository: getIt()),
+  );
+
+  getIt.registerFactory<ProfileBloc>(
+    () => ProfileBloc(getProfileUseCase: getIt()),
   );
 }

@@ -1,54 +1,60 @@
+// lib/features/history/presentation/view/history_view.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_mgnt/features/history/presentation/view_model/history_bloc.dart';
+import 'package:game_mgnt/features/history/presentation/view_model/history_event.dart';
+import 'package:game_mgnt/features/history/presentation/view_model/history_state.dart';
 
-class HistoryView extends StatelessWidget {
+class HistoryView extends StatefulWidget {
   const HistoryView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Sample data for historical events or activities
-    final List<Map<String, String>> historyItems = [
-      {
-        'title': 'Tournament A - Registration',
-        'date': '2023-12-10',
-        'description': 'You registered for Tournament A'
-      },
-      {
-        'title': 'Tournament B - Victory',
-        'date': '2023-11-05',
-        'description': 'You won Tournament B and received a prize.'
-      },
-      {
-        'title': 'Tournament C - Registration',
-        'date': '2023-10-20',
-        'description': 'You registered for Tournament C.'
-      },
-      {
-        'title': 'Tournament D - Participation',
-        'date': '2023-09-15',
-        'description': 'You participated in Tournament D but did not win.'
-      },
-    ];
+  State<HistoryView> createState() => _HistoryViewState();
+}
 
+class _HistoryViewState extends State<HistoryView> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<HistoryBloc>().add(FetchWinners());
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('History'),
-        backgroundColor: const Color(0xFF990000), // Match the dashboard theme
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView.builder(
-          itemCount: historyItems.length,
-          itemBuilder: (context, index) {
-            final item = historyItems[index];
-            return _buildHistoryItem(context, item);
-          },
+        title: const Text(
+          'History',
+          style: TextStyle(color: Colors.white), // Set the text color to white
         ),
+        backgroundColor: const Color(0xFF990000),
+      ),
+      body: BlocBuilder<HistoryBloc, HistoryState>(
+        builder: (context, state) {
+          if (state is HistoryLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is HistoryLoaded) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView.builder(
+                itemCount: state.winners.length,
+                itemBuilder: (context, index) {
+                  final item = state.winners[index];
+                  return _buildHistoryItem(context, item);
+                },
+              ),
+            );
+          } else if (state is HistoryError) {
+            return Center(child: Text('Error: ${state.message}'));
+          } else {
+            return const Center(child: Text('Initial state'));
+          }
+        },
       ),
     );
   }
 
-  /// Reusable method to build each history item in the list
-  Widget _buildHistoryItem(BuildContext context, Map<String, String> item) {
+  Widget _buildHistoryItem(BuildContext context, item) {
     return Card(
       elevation: 4,
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -58,19 +64,19 @@ class HistoryView extends StatelessWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
         title: Text(
-          item['title'] ?? '',
+          item.tournament,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              item['date'] ?? '',
+              item.date.toString(),
               style: const TextStyle(
                   fontStyle: FontStyle.italic, color: Colors.grey),
             ),
             const SizedBox(height: 8),
-            Text(item['description'] ?? ''),
+            Text(item.winner),
           ],
         ),
         trailing: Icon(
