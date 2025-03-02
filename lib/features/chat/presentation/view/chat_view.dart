@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:game_mgnt/app/di/di.dart';
+import 'package:game_mgnt/features/chat/domain/entity/chat_entity.dart';
+import 'package:game_mgnt/features/chat/presentation/view_model/chat_bloc.dart';
+import 'package:game_mgnt/features/chat/presentation/view_model/chat_event.dart';
+import 'package:game_mgnt/features/chat/presentation/view_model/chat_state.dart';
 
 class CommentsView extends StatefulWidget {
   const CommentsView({super.key});
@@ -8,45 +14,65 @@ class CommentsView extends StatefulWidget {
 }
 
 class _CommentsViewState extends State<CommentsView> {
-  // Controller for typing new messages
   final TextEditingController _controller = TextEditingController();
+  late CommentsBloc _commentsBloc;
+  late String _userId;
+  late String _loggedInUserId;
 
-  // List to store the messages (for demonstration purposes)
-  final List<Map<String, String>> _messages = [
-    {'sender': 'John', 'message': 'Hey there! How are you?'},
-    {'sender': 'You', 'message': 'I am doing great, thanks!'},
-    {'sender': 'John', 'message': 'Awesome! Let\'s catch up soon.'},
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _commentsBloc = getIt.get<CommentsBloc>();
+    _userId = getIt.get<String>(instanceName: 'userId');
+    _loggedInUserId = getIt.get<String>(instanceName: 'loggedInUserId');
+
+    _commentsBloc.add(GetMessagesEvent(_userId));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Comments / Chat'),
-        backgroundColor: const Color(0xFF990000), // Match with dashboard color
+        title: const Text(
+          'Chat',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: const Color(0xFF990000),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SafeArea(
         child: Column(
           children: [
-            // Message List
             Expanded(
-              child: ListView.builder(
-                reverse:
-                    true, // To display the most recent message at the bottom
-                itemCount: _messages.length,
-                itemBuilder: (context, index) {
-                  final message = _messages[index];
-                  return _buildMessageBubble(
-                      message['sender']!, message['message']!);
+              child: BlocBuilder<CommentsBloc, CommentsState>(
+                bloc: _commentsBloc,
+                builder: (context, state) {
+                  if (state is CommentsLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is CommentsLoaded) {
+                    return ListView.builder(
+                      reverse: true,
+                      itemCount: state.messages.length,
+                      itemBuilder: (context, index) {
+                        final message = state.messages[index];
+                        return _buildMessageBubble(
+                          message,
+                          message.sender == _loggedInUserId,
+                        );
+                      },
+                    );
+                  } else if (state is CommentsError) {
+                    return Center(child: Text('Error: ${state.message}'));
+                  } else {
+                    return const SizedBox.shrink();
+                  }
                 },
               ),
             ),
-            // Text Input for sending messages
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Row(
                 children: [
-                  // Text Input Field
                   Expanded(
                     child: TextField(
                       controller: _controller,
@@ -59,21 +85,15 @@ class _CommentsViewState extends State<CommentsView> {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  // Send Button
                   IconButton(
-                    icon: const Icon(Icons.send),
+                    icon: const Icon(Icons.send, color: Colors.white),
+                    color: const Color(0xFF990000),
                     onPressed: () {
                       if (_controller.text.isNotEmpty) {
-                        setState(() {
-                          _messages.insert(
-                            0,
-                            {
-                              'sender': 'You',
-                              'message': _controller.text
-                            }, // Add new message at the top
-                          );
-                          _controller.clear(); // Clear input field
-                        });
+                        _commentsBloc.add(
+                          SendMessageEvent(_userId, _controller.text),
+                        );
+                        _controller.clear();
                       }
                     },
                   ),
@@ -86,11 +106,7 @@ class _CommentsViewState extends State<CommentsView> {
     );
   }
 
-  // Reusable widget for individual message bubbles
-  Widget _buildMessageBubble(String sender, String message) {
-    final bool isMe =
-        sender == 'You'; // Determine if the message is from the user
-
+  Widget _buildMessageBubble(MessageEntity message, bool isMe) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
       child: Align(
@@ -98,24 +114,24 @@ class _CommentsViewState extends State<CommentsView> {
         child: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: isMe ? const Color(0xFF990000) : const Color(0xFFE0E0E0),
+            color: isMe ? const Color(0xFF990000) : Colors.white,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                sender,
+                isMe ? 'You' : 'Other User',
                 style: TextStyle(
-                  color: isMe ? Colors.white : Colors.black87,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 5),
               Text(
-                message,
-                style: TextStyle(
-                  color: isMe ? Colors.white : Colors.black87,
+                message.text,
+                style: const TextStyle(
+                  color: Colors.white,
                 ),
               ),
             ],

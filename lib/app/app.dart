@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_mgnt/features/auth/presentation/view_model/login/login_bloc.dart';
-import 'package:game_mgnt/features/profile/presentation/view/profile_view.dart';
-import 'package:game_mgnt/features/profile/presentation/view_model/profile_bloc.dart';
+import 'package:game_mgnt/features/chat/presentation/view_model/chat_bloc.dart';
+import 'package:game_mgnt/features/onboarding/presentation/view/onboarding_view.dart';
 
 import 'di/di.dart';
 
@@ -22,10 +22,10 @@ class App extends StatelessWidget {
           ),
           // Providing TournamentBloc
           BlocProvider.value(
-            value: getIt<ProfileBloc>(),
+            value: getIt<CommentsBloc>(),
           ),
         ],
-        child: ProfileView(),
+        child: OnboardingView(),
       ),
     );
   }

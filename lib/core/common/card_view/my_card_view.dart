@@ -4,27 +4,31 @@ import 'package:game_mgnt/features/dashboard/presentation/view_model/dashboard_c
 
 class MyCardView extends StatelessWidget {
   final String label;
-  final Color color;
   final IconData icon;
+  final Color color;
+  final Widget? page;
   final bool isGradient;
   final String? navigationTarget;
-  final Widget? page;
+  final VoidCallback? onTap; // Optional onTap callback
 
   const MyCardView({
     super.key,
     required this.label,
-    required this.color,
     required this.icon,
+    required this.color,
+    this.page,
     this.isGradient = false,
     this.navigationTarget,
-    this.page,
+    this.onTap, // Optional onTap
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (navigationTarget == 'Games') {
+        if (onTap != null) {
+          onTap!(); // Use the provided onTap callback
+        } else if (navigationTarget == 'Games') {
           // Trigger navigation using the Cubit method for "Games"
           context.read<DashboardCubit>().navigateToTournamentCreation(context);
         } else if (page != null) {

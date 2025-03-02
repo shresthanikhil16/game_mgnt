@@ -11,6 +11,11 @@ import 'package:game_mgnt/features/auth/domain/use_case/register_user_usecase.da
 import 'package:game_mgnt/features/auth/domain/use_case/upload_image_usecase.dart';
 import 'package:game_mgnt/features/auth/presentation/view_model/login/login_bloc.dart';
 import 'package:game_mgnt/features/auth/presentation/view_model/signup/register_bloc.dart';
+import 'package:game_mgnt/features/chat/data/data_source/chat_remote_data_source/chat_remote_data_source.dart';
+import 'package:game_mgnt/features/chat/data/repository/chat_remote_repository/chat_remote_repository.dart';
+import 'package:game_mgnt/features/chat/domain/usecase/get_message_usecase.dart';
+import 'package:game_mgnt/features/chat/domain/usecase/sned_message_usecase.dart';
+import 'package:game_mgnt/features/chat/presentation/view_model/chat_bloc.dart';
 import 'package:game_mgnt/features/dashboard/presentation/view_model/dashboard_cubit.dart';
 import 'package:game_mgnt/features/history/data/data_source/remote_data_source/history_remote_data_source.dart';
 import 'package:game_mgnt/features/history/data/repository/history_repository_remote.dart';
@@ -53,6 +58,7 @@ Future<void> initDependencies() async {
   _initMatchupDependencies();
   _initHistoryDependencies();
   _initProfileDependencies(); // Add this line
+  _initChatDependencies();
 }
 
 Future<void> _initSharedPreferences() async {
@@ -245,5 +251,36 @@ void _initProfileDependencies() {
 
   getIt.registerFactory<ProfileBloc>(
     () => ProfileBloc(getProfileUseCase: getIt()),
+  );
+}
+
+void _initChatDependencies() {
+  getIt.registerFactory<String>(
+      instanceName: 'userId', () => 'otherUserId'); // Replace with your logic
+  getIt.registerFactory<String>(
+      instanceName: 'loggedInUserId',
+      () => 'loggedInUserId'); // Replace with your logic
+
+  getIt.registerLazySingleton<RemoteMessageDataSource>(
+    () => RemoteMessageDataSource(getIt<Dio>()),
+  );
+
+  getIt.registerLazySingleton<RemoteMessageRepository>(
+    () => RemoteMessageRepository(getIt<RemoteMessageDataSource>()),
+  );
+
+  getIt.registerLazySingleton<SendMessageUseCase>(
+    () => SendMessageUseCase(getIt<RemoteMessageRepository>()),
+  );
+
+  getIt.registerLazySingleton<GetMessagesUseCase>(
+    () => GetMessagesUseCase(getIt<RemoteMessageRepository>()),
+  );
+
+  getIt.registerFactory<CommentsBloc>(
+    () => CommentsBloc(
+      sendMessageUseCase: getIt<SendMessageUseCase>(),
+      getMessagesUseCase: getIt<GetMessagesUseCase>(),
+    ),
   );
 }
