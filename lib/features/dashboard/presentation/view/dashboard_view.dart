@@ -260,24 +260,27 @@ class DashboardScreen extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 20,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 30), // Adjust padding here
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20,
+          ),
+          itemCount: dashboardItems.length,
+          itemBuilder: (context, index) {
+            final item = dashboardItems[index];
+            return MyCardView(
+              label: item['title'] as String,
+              icon: item['icon'] as IconData,
+              color: item['color'] as Color,
+              page: item['page'] as Widget,
+            );
+          },
         ),
-        itemCount: dashboardItems.length,
-        itemBuilder: (context, index) {
-          final item = dashboardItems[index];
-          return MyCardView(
-            label: item['title'] as String,
-            icon: item['icon'] as IconData,
-            color: item['color'] as Color,
-            page: item['page'] as Widget,
-          );
-        },
       ),
     );
   }
