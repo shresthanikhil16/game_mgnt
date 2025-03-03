@@ -1,4 +1,3 @@
-// tournament_creation_remote_repository.dart (Canvas 4)
 import 'package:dartz/dartz.dart';
 import 'package:game_mgnt/core/error/failure.dart';
 import 'package:game_mgnt/features/tournament_creation/data/data_source/remote_data_source.dart/tournament_creation_remote_data_source.dart';
@@ -15,7 +14,7 @@ class TournamentRepository implements ITournamentRepository {
       TournamentEntity tournament) async {
     try {
       await remoteDataSource.createTournament(tournament);
-      return Right(null);
+      return const Right(null);
     } catch (e) {
       return Left(ApiFailure(message: e.toString()));
     }

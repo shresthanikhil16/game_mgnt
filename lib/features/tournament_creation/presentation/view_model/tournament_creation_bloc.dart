@@ -1,4 +1,3 @@
-// tournament_bloc.dart (Canvas 10 continued)
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_mgnt/features/tournament_creation/data/repository/tournament_creation_remote_repository.dart';
 import 'package:game_mgnt/features/tournament_creation/presentation/view_model/tournament_creation_event.dart';
@@ -37,10 +36,18 @@ class TournamentBloc extends Bloc<TournamentEvent, TournamentState> {
 
     on<FetchGameList>((event, emit) async {
       emit(TournamentLoading());
+      print("FetchGameList: Emitting TournamentLoading");
+
       final result = await repository.getGameList();
       result.fold(
-        (failure) => emit(TournamentError(failure.message)),
-        (games) => emit(GameListLoaded(games)),
+        (failure) {
+          emit(TournamentError(failure.message));
+          print("FetchGameList: Emitting TournamentError: ${failure.message}");
+        },
+        (games) {
+          emit(GameListLoaded(games));
+          print("FetchGameList: Emitting GameListLoaded: $games");
+        },
       );
     });
   }

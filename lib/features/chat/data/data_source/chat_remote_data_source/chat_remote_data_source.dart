@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:game_mgnt/app/constants/api_endpoint.dart';
+import 'package:game_mgnt/app/constants/api_endpoint.dart'; // Make sure this is imported
 import 'package:game_mgnt/features/chat/data/model/chat_api_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RemoteMessageDataSource {
   final Dio _dio;
@@ -9,12 +10,24 @@ class RemoteMessageDataSource {
 
   Future<ApiMessageModel> sendMessage(String receiver, String text) async {
     try {
+      final token = await _getToken();
+      if (token == null) {
+        throw Exception('No token found. Please log in.');
+      }
+
       final response = await _dio.post(
-        '${ApiEndpoints.baseUrl}messages', // Use ApiEndpoints.baseUrl
+        '${ApiEndpoints.baseUrl}messages/', // Use ApiEndpoints.baseUrl and append 'messages/'
         data: {
           'receiver': receiver,
           'text': text,
         },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        ),
       );
 
       if (response.statusCode == 201) {
@@ -34,8 +47,21 @@ class RemoteMessageDataSource {
 
   Future<List<ApiMessageModel>> getMessages(String userId) async {
     try {
+      final token = await _getToken();
+      if (token == null) {
+        throw Exception('No token found. Please log in.');
+      }
+
       final response = await _dio.get(
-          '${ApiEndpoints.baseUrl}messages/$userId'); // Use ApiEndpoints.baseUrl
+        '${ApiEndpoints.baseUrl}messages/$userId', // Use ApiEndpoints.baseUrl and append 'messages/$userId'
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
 
       if (response.statusCode == 200) {
         final List<dynamic> messagesJson = response.data['messages'];
@@ -53,5 +79,10 @@ class RemoteMessageDataSource {
     } catch (e) {
       throw Exception('Failed to get messages: $e');
     }
+  }
+
+  Future<String?> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
   }
 }

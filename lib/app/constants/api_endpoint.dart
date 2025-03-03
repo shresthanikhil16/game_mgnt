@@ -17,7 +17,7 @@ class ApiEndpoints {
   static const String getTournamentsByGame = "tournaments/";
   static const String getTournamentNamesByGame = "tournaments/names/";
   static const String getGameList = "games/games";
-  static const String getGameNamesList = "gamesname";
+  static const String getGameNamesList = "games/gamesname";
   static const String getAllGameNames = "games/allnames"; // New endpoint
 
   static const String registerPlayer = "player/registerPlayer";
@@ -30,5 +30,8 @@ class ApiEndpoints {
   static const String getWinners = "winners/winners";
 
   // Profile Endpoints
-  static const String getMe = "auth/getMe"; // Add this line
+  static const String getCurrentUser = "auth/getMe"; // Add this line
+
+  //Chat
+  static const String getChatUser = "messages/:userId"; // Add this line
 }

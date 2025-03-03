@@ -1,79 +1,102 @@
 import 'package:flutter/material.dart';
 
-import '../../app/constants/theme_constant.dart';
-
 class AppTheme {
-  AppTheme._();
-
-  static getApplicationTheme({required bool isDarkMode}) {
+  static ThemeData getLightTheme() {
     return ThemeData(
-      // change the theme according to the user preference
-      colorScheme: isDarkMode
-          ? ColorScheme.dark(
-              primary: ThemeConstant.darkPrimaryColor,
-            )
-          : const ColorScheme.light(
-              primary: Color.fromARGB(255, 17, 119, 20),
-            ),
-      brightness: isDarkMode ? Brightness.dark : Brightness.light,
-      fontFamily: 'Montserrat',
-      useMaterial3: true,
-
-      // Change app bar color
+      brightness: Brightness.light,
+      primaryColor: const Color(0xFF990000),
+      scaffoldBackgroundColor: Colors.grey[200],
+      fontFamily: 'Montserrat Regular',
       appBarTheme: const AppBarTheme(
-        elevation: 0,
-        backgroundColor: ThemeConstant.appBarColor,
         centerTitle: true,
+        backgroundColor: Color(0xFF990000),
+        elevation: 4,
         titleTextStyle: TextStyle(
+          fontSize: 18,
           color: Colors.white,
-          fontSize: 20,
+          fontWeight: FontWeight.bold,
         ),
       ),
-
-      // Change elevated button theme
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        selectedItemColor: Color(0xFF990000),
+        unselectedItemColor: Colors.grey,
+        backgroundColor: Colors.white,
+      ),
+      cardTheme: const CardTheme(
+        color: Colors.white,
+        elevation: 2,
+      ),
+      iconTheme: const IconThemeData(color: Colors.black54),
+      textTheme: const TextTheme(
+        bodyMedium: TextStyle(color: Colors.black87),
+        headlineSmall:
+            TextStyle(color: Colors.black87, fontWeight: FontWeight.bold),
+      ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          elevation: 0,
-          foregroundColor: Colors.white,
-          backgroundColor: ThemeConstant.primaryColor,
           textStyle: const TextStyle(
-            fontSize: 20,
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
           ),
+          backgroundColor: const Color(0xFF990000),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(50),
           ),
         ),
       ),
-
-      // Change text field theme
       inputDecorationTheme: const InputDecorationTheme(
-        contentPadding: EdgeInsets.all(15),
-        border: OutlineInputBorder(),
-        labelStyle: TextStyle(
-          fontSize: 20,
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.red,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: ThemeConstant.primaryColor,
-          ),
+        labelStyle: TextStyle(color: Colors.black87),
+        hintStyle: TextStyle(color: Colors.grey),
+      ),
+    );
+  }
+
+  static ThemeData getDarkTheme() {
+    return ThemeData(
+      brightness: Brightness.dark,
+      primaryColor: const Color(0xFF990000),
+      scaffoldBackgroundColor: Colors.black,
+      fontFamily: 'Montserrat Regular',
+      appBarTheme: const AppBarTheme(
+        centerTitle: true,
+        backgroundColor: Color(0xFF4B0000),
+        elevation: 4,
+        titleTextStyle: TextStyle(
+          fontSize: 18,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
         ),
       ),
-      // Circular progress bar theme
-      progressIndicatorTheme: const ProgressIndicatorThemeData(
-        color: ThemeConstant.primaryColor,
-      ),
-      //Bottom navigation bar theme
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: Colors.lightGreen,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.black,
-        type: BottomNavigationBarType.fixed,
-        elevation: 0,
+        selectedItemColor: Color(0xFF990000),
+        unselectedItemColor: Colors.grey,
+        backgroundColor: Colors.black,
+      ),
+      cardTheme: CardTheme(
+        color: Colors.grey[850],
+        elevation: 2,
+      ),
+      iconTheme: const IconThemeData(color: Colors.white),
+      textTheme: const TextTheme(
+        bodyMedium: TextStyle(color: Colors.white70),
+        headlineSmall:
+            TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          textStyle: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+          backgroundColor: const Color(0xFF990000),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
+        ),
+      ),
+      inputDecorationTheme: const InputDecorationTheme(
+        labelStyle: TextStyle(color: Colors.white),
+        hintStyle: TextStyle(color: Colors.grey),
       ),
     );
   }

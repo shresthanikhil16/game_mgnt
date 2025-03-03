@@ -1,4 +1,3 @@
-// tournament_creation_view.dart (Canvas 9)
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_mgnt/features/tournament_creation/domain/entity/tournament_creation_entity.dart';
@@ -20,13 +19,13 @@ class _CreateTournamentViewState extends State<CreateTournamentView> {
   final TextEditingController _endDateController = TextEditingController();
   final TextEditingController _prizeController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  List<String> _games = []; // Changed to dynamic list
+  List<String> _games = [];
   String? _selectedGame;
 
   @override
   void initState() {
     super.initState();
-    context.read<TournamentBloc>().add(FetchGameList()); // Fetch games on init
+    context.read<TournamentBloc>().add(FetchGameList());
   }
 
   @override
@@ -134,6 +133,7 @@ class _CreateTournamentViewState extends State<CreateTournamentView> {
       ),
       validator: validator,
       maxLines: maxLines,
+      style: const TextStyle(color: Colors.black), // Set text color to black
     );
   }
 
@@ -178,6 +178,7 @@ class _CreateTournamentViewState extends State<CreateTournamentView> {
         }
       },
       readOnly: true,
+      style: const TextStyle(color: Colors.black), // Set text color to black
     );
   }
 

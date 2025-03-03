@@ -1,4 +1,3 @@
-// tournament_remote_data_source.dart (Corrected)
 import 'package:dio/dio.dart';
 import 'package:game_mgnt/app/constants/api_endpoint.dart';
 import 'package:game_mgnt/features/tournament_creation/domain/entity/tournament_creation_entity.dart';
@@ -11,6 +10,8 @@ class TournamentRemoteDataSource {
   Future<void> createTournament(TournamentEntity tournament) async {
     try {
       await _dio.post(ApiEndpoints.createTournament, data: tournament.toJson());
+    } on DioException catch (e) {
+      throw Exception("Dio error creating tournament: ${e.message}");
     } catch (e) {
       throw Exception("Failed to create tournament: $e");
     }
@@ -23,6 +24,8 @@ class TournamentRemoteDataSource {
       return (response.data as List)
           .map((json) => TournamentEntity.fromJson(json))
           .toList();
+    } on DioException catch (e) {
+      throw Exception("Dio error fetching tournaments: ${e.message}");
     } catch (e) {
       throw Exception("Failed to fetch tournaments: $e");
     }
@@ -35,6 +38,8 @@ class TournamentRemoteDataSource {
       return (response.data as List)
           .map((json) => json["name"].toString())
           .toList();
+    } on DioException catch (e) {
+      throw Exception("Dio error fetching tournament names: ${e.message}");
     } catch (e) {
       throw Exception("Failed to fetch tournament names: $e");
     }
@@ -44,11 +49,11 @@ class TournamentRemoteDataSource {
     try {
       final response = await _dio.get(ApiEndpoints.getGameNamesList);
       return (response.data as List).map((game) => game.toString()).toList();
+    } on DioException catch (e) {
+      print("DioError: ${e.message}");
+      print("DioError Response: ${e.response}");
+      throw Exception("Dio error fetching games: ${e.message}");
     } catch (e) {
-      if (e is DioException) {
-        print("DioError: ${e.message}");
-        print("DioError Response: ${e.response}");
-      }
       throw Exception("Failed to fetch games: $e");
     }
   }

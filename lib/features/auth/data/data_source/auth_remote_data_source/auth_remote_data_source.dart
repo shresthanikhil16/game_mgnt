@@ -1,18 +1,42 @@
 import 'dart:io';
 
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:game_mgnt/app/constants/api_endpoint.dart';
-import 'package:game_mgnt/features/auth/data/data_source/auth_data_source.dart';
-import 'package:game_mgnt/features/auth/domain/entity/auth_entity.dart';
+import 'package:game_mgnt/core/error/failure.dart';
+import '../../../domain/entity/auth_entity.dart';
+import '../../model/auth_api_model.dart';
+import '../auth_data_source.dart';
 
 class AuthRemoteDataSource implements IAuthDataSource {
   final Dio _dio;
 
   AuthRemoteDataSource(this._dio);
+
   @override
-  Future<AuthEntity> getCurrentUser() {
-    // TODO: implement getCurrentUser
-    throw UnimplementedError();
+  Future<void> registerStudent(AuthEntity student) async {
+    try {
+      Response response = await _dio.post(
+        ApiEndpoints.register,
+        data: {
+          "username": student.username,
+          "profilePicture": student.profilePicture,
+          "email": student.email,
+          "password": student.password,
+          "confirmPassword": student.confirmPassword,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return;
+      } else {
+        throw Exception(response.statusMessage);
+      }
+    } on DioException catch (e) {
+      throw Exception(e);
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   @override
@@ -29,28 +53,6 @@ class AuthRemoteDataSource implements IAuthDataSource {
       if (response.statusCode == 200) {
         final str = response.data['token'];
         return str;
-      } else {
-        throw Exception(response.statusMessage);
-      }
-    } on DioException catch (e) {
-      throw Exception(e);
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
-
-  @override
-  Future<void> registerStudent(AuthEntity student) async {
-    try {
-      Response response = await _dio.post(ApiEndpoints.register, data: {
-        "username": student.username,
-        "email": student.email,
-        "profilePicture": student.profilePicture,
-        "password": student.password,
-        "confirmPassword": student.confirmPassword,
-      });
-      if (response.statusCode == 201) {
-        return;
       } else {
         throw Exception(response.statusMessage);
       }
@@ -91,6 +93,29 @@ class AuthRemoteDataSource implements IAuthDataSource {
       throw Exception(e);
     } catch (e) {
       throw Exception(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, AuthEntity>> getCurrentUser(String token) async {
+    try {
+      _dio.options.headers['Authorization'] = 'Bearer $token';
+      Response response = await _dio.get(ApiEndpoints.getCurrentUser);
+
+      if (response.statusCode == 200) {
+        final authApiModel = AuthApiModel.fromJson(response.data);
+        return Right(authApiModel.toEntity());
+      } else {
+        return Left(
+            ApiFailure(message: response.statusMessage ?? "Unknown Error"));
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        return Left(ApiFailure(message: e.response!.data.toString()));
+      }
+      return Left(ApiFailure(message: e.message ?? "Dio Exception"));
+    } catch (e) {
+      return Left(ApiFailure(message: e.toString()));
     }
   }
 }

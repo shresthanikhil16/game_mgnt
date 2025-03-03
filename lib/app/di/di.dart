@@ -6,10 +6,12 @@ import 'package:game_mgnt/features/auth/data/data_source/auth_local_data_souce/a
 import 'package:game_mgnt/features/auth/data/data_source/auth_remote_data_source/auth_remote_data_source.dart';
 import 'package:game_mgnt/features/auth/data/repository/auth_local_repository/auth_local_repository.dart';
 import 'package:game_mgnt/features/auth/data/repository/auth_remote_repository/auth_remote_repository.dart';
+import 'package:game_mgnt/features/auth/domain/use_case/get_profile_usecase.dart';
 import 'package:game_mgnt/features/auth/domain/use_case/login_usecase.dart';
 import 'package:game_mgnt/features/auth/domain/use_case/register_user_usecase.dart';
 import 'package:game_mgnt/features/auth/domain/use_case/upload_image_usecase.dart';
 import 'package:game_mgnt/features/auth/presentation/view_model/login/login_bloc.dart';
+import 'package:game_mgnt/features/auth/presentation/view_model/profile/profile_bloc.dart';
 import 'package:game_mgnt/features/auth/presentation/view_model/signup/register_bloc.dart';
 import 'package:game_mgnt/features/chat/data/data_source/chat_remote_data_source/chat_remote_data_source.dart';
 import 'package:game_mgnt/features/chat/data/repository/chat_remote_repository/chat_remote_repository.dart';
@@ -31,11 +33,6 @@ import 'package:game_mgnt/features/matchup/data/repository/matchups_remote_repos
 import 'package:game_mgnt/features/matchup/domain/repository/matchups_repository.dart';
 import 'package:game_mgnt/features/matchup/domain/use_case/matchups_usecase.dart';
 import 'package:game_mgnt/features/matchup/presentation/view_model/matchups_bloc.dart';
-import 'package:game_mgnt/features/profile/data/data_source/remote_data_source.dart/profile_remote_data_source.dart';
-import 'package:game_mgnt/features/profile/data/repository/profile_remote_repository.dart';
-import 'package:game_mgnt/features/profile/domain/repository/profile_repository.dart';
-import 'package:game_mgnt/features/profile/domain/use_case/get_profile_usecase.dart';
-import 'package:game_mgnt/features/profile/presentation/view_model/profile_bloc.dart';
 import 'package:game_mgnt/features/tournament_creation/data/data_source/remote_data_source.dart/tournament_creation_remote_data_source.dart';
 import 'package:game_mgnt/features/tournament_creation/data/repository/tournament_creation_remote_repository.dart';
 import 'package:game_mgnt/features/tournament_creation/domain/use_case/get_tournament_usecase.dart';
@@ -57,8 +54,8 @@ Future<void> initDependencies() async {
   _initTournamentRegistrationDependencies();
   _initMatchupDependencies();
   _initHistoryDependencies();
-  _initProfileDependencies(); // Add this line
   _initChatDependencies();
+  _initProfileDependencies();
 }
 
 Future<void> _initSharedPreferences() async {
@@ -74,12 +71,10 @@ void _initHiveService() {
   getIt.registerLazySingleton<HiveService>(() => HiveService());
 }
 
-// =========================== Dashboard ===========================
 void _initDashboardDependencies() {
   getIt.registerFactory<DashboardCubit>(() => DashboardCubit());
 }
 
-// =========================== Auth/Register ===========================
 void _initRegisterDependencies() {
   getIt.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSource(getIt<HiveService>()),
@@ -110,7 +105,6 @@ void _initRegisterDependencies() {
   );
 }
 
-// =========================== Auth/Login ===========================
 void _initLoginDependencies() {
   getIt.registerLazySingleton<TokenSharedPrefs>(
     () => TokenSharedPrefs(getIt<SharedPreferences>()),
@@ -132,7 +126,6 @@ void _initLoginDependencies() {
   );
 }
 
-// =========================== Tournament Creation ===========================
 void _initTournamentDependencies() {
   getIt.registerLazySingleton<TournamentRemoteDataSource>(
     () => TournamentRemoteDataSource(getIt<Dio>()),
@@ -154,7 +147,6 @@ void _initTournamentDependencies() {
   );
 }
 
-// =========================== Tournament Registration ===========================
 void _initTournamentRegistrationDependencies() {
   getIt.registerLazySingleton<TournamentRegistrationRemoteDataSource>(
     () => TournamentRegistrationRemoteDataSource(getIt<Dio>()),
@@ -162,7 +154,8 @@ void _initTournamentRegistrationDependencies() {
 
   getIt.registerLazySingleton<TournamentRegistrationRepository>(
     () => TournamentRegistrationRepository(
-        getIt<TournamentRegistrationRemoteDataSource>()),
+      getIt<TournamentRegistrationRemoteDataSource>(),
+    ),
   );
 
   getIt.registerLazySingleton<RegisterPlayerUseCase>(
@@ -185,12 +178,11 @@ void _initTournamentRegistrationDependencies() {
       registerPlayerUseCase: getIt(),
       getRegisteredPlayersUseCase: getIt(),
       getTournamentNamesUseCase: getIt(),
-      getAllGameNamesUseCase: getIt(), // Include the new use case
+      getAllGameNamesUseCase: getIt(),
     ),
   );
 }
 
-// =========================== Matchup ===========================
 void _initMatchupDependencies() {
   getIt.registerLazySingleton<MatchupRemoteDataSource>(
     () => MatchupRemoteDataSource(getIt<Dio>()),
@@ -216,7 +208,6 @@ void _initMatchupDependencies() {
   );
 }
 
-// =========================== History ===========================
 void _initHistoryDependencies() {
   getIt.registerLazySingleton<HistoryRemoteDataSource>(
     () => HistoryRemoteDataSource(dio: getIt<Dio>()),
@@ -235,31 +226,17 @@ void _initHistoryDependencies() {
   );
 }
 
-// =========================== Profile ===========================
 void _initProfileDependencies() {
-  getIt.registerLazySingleton<ProfileRemoteDataSource>(
-    () => ProfileRemoteDataSource(dio: getIt<Dio>()),
-  );
-
-  getIt.registerLazySingleton<ProfileRepository>(
-    () => ProfileRemoteRepository(remoteDataSource: getIt()),
-  );
-
   getIt.registerLazySingleton<GetProfileUseCase>(
-    () => GetProfileUseCase(repository: getIt()),
-  );
-
+      () => GetProfileUseCase(getIt<AuthRemoteRepository>()));
   getIt.registerFactory<ProfileBloc>(
-    () => ProfileBloc(getProfileUseCase: getIt()),
-  );
+      () => ProfileBloc(getIt<GetProfileUseCase>()));
 }
 
 void _initChatDependencies() {
+  getIt.registerFactory<String>(instanceName: 'userId', () => 'otherUserId');
   getIt.registerFactory<String>(
-      instanceName: 'userId', () => 'otherUserId'); // Replace with your logic
-  getIt.registerFactory<String>(
-      instanceName: 'loggedInUserId',
-      () => 'loggedInUserId'); // Replace with your logic
+      instanceName: 'loggedInUserId', () => 'loggedInUserId');
 
   getIt.registerLazySingleton<RemoteMessageDataSource>(
     () => RemoteMessageDataSource(getIt<Dio>()),
