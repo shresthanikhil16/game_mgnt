@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_mgnt/core/theme/app_theme.dart';
 import 'package:game_mgnt/core/theme/theme_cubit.dart';
+import 'package:game_mgnt/features/about_us/view/about_us_view.dart'; // Import AboutUsView
 import 'package:game_mgnt/features/auth/presentation/view/login_view.dart';
+import 'package:game_mgnt/features/auth/presentation/view/profile_view.dart'; // Import ProfileView
+import 'package:game_mgnt/features/contact_us/view/contact_us_view.dart'; // Import ContactUsView
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
@@ -33,29 +37,53 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             body: ListView(
               children: [
-                const ListTile(
-                  leading: Icon(CupertinoIcons.person),
-                  title: Text('Account'),
-                  subtitle: Text('Manage your account details'),
-                  trailing: Icon(Icons.arrow_forward_ios),
+                ListTile(
+                  leading: const Icon(CupertinoIcons.person),
+                  title: const Text('Account'),
+                  subtitle: const Text('Manage your account details'),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    // Navigate to Profile View
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ProfileView()),
+                    );
+                  },
                 ),
-                const ListTile(
-                  leading: Icon(CupertinoIcons.bell),
-                  title: Text('Notifications'),
-                  subtitle: Text('Manage notification preferences'),
-                  trailing: Icon(Icons.arrow_forward_ios),
+                ListTile(
+                  leading: const Icon(CupertinoIcons.bell),
+                  title: const Text('Notifications'),
+                  subtitle: const Text('Manage notification preferences'),
+                  trailing: const Icon(Icons.arrow_forward_ios),
                 ),
-                const ListTile(
-                  leading: Icon(CupertinoIcons.lock),
-                  title: Text('Privacy & Security'),
-                  subtitle: Text('Manage your privacy settings'),
-                  trailing: Icon(Icons.arrow_forward_ios),
+                ListTile(
+                  leading: const Icon(CupertinoIcons.lock),
+                  title: const Text('Privacy & Security'),
+                  subtitle: const Text('Manage your privacy settings'),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    // Navigate to About Us View
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AboutUsScreen()),
+                    );
+                  },
                 ),
-                const ListTile(
-                  leading: Icon(CupertinoIcons.question_circle),
-                  title: Text('Help & Support'),
-                  subtitle: Text('Get support or FAQs'),
-                  trailing: Icon(Icons.arrow_forward_ios),
+                ListTile(
+                  leading: const Icon(CupertinoIcons.question_circle),
+                  title: const Text('Help & Support'),
+                  subtitle: const Text('Get support or FAQs'),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    // Navigate to Contact Us View
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ContactScreen()),
+                    );
+                  },
                 ),
                 const Divider(),
                 ListTile(
