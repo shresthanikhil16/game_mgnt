@@ -5,6 +5,7 @@ import 'package:game_mgnt/app/di/di.dart';
 import 'package:game_mgnt/core/common/card_view/my_card_view.dart';
 import 'package:game_mgnt/core/theme/app_theme.dart';
 import 'package:game_mgnt/core/theme/theme_cubit.dart';
+import 'package:game_mgnt/core/utils/shake_report_overlay.dart';
 import 'package:game_mgnt/features/about_us/view/about_us_view.dart';
 import 'package:game_mgnt/features/auth/domain/use_case/get_profile_usecase.dart';
 import 'package:game_mgnt/features/auth/presentation/view/profile_view.dart';
@@ -52,6 +53,8 @@ class _DashboardViewState extends State<DashboardView> {
 class DashboardViewBody extends StatelessWidget {
   DashboardViewBody({super.key});
 
+  final GlobalKey<OverlayState> overlayKey = GlobalKey<OverlayState>();
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, bool>(
@@ -62,10 +65,23 @@ class DashboardViewBody extends StatelessWidget {
               isDarkMode ? AppTheme.getDarkTheme() : AppTheme.getLightTheme(),
           home: SafeArea(
             child: Scaffold(
-              body: BlocBuilder<DashboardCubit, DashboardState>(
-                builder: (context, state) {
-                  return _screens[state.selectedIndex];
-                },
+              body: Stack(
+                children: [
+                  BlocBuilder<DashboardCubit, DashboardState>(
+                    builder: (context, state) {
+                      return _screens[state.selectedIndex];
+                    },
+                  ),
+                  Overlay(
+                    key: overlayKey,
+                    initialEntries: [
+                      OverlayEntry(
+                        builder: (context) =>
+                            ShakeReportOverlay(overlayKey: overlayKey),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               bottomNavigationBar: BlocBuilder<DashboardCubit, DashboardState>(
                 builder: (context, state) {
