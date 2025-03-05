@@ -48,7 +48,18 @@ class TournamentRemoteDataSource {
   Future<List<String>> fetchGameList() async {
     try {
       final response = await _dio.get(ApiEndpoints.getGameNamesList);
-      return (response.data as List).map((game) => game.toString()).toList();
+
+      if (response.data is List) {
+        return (response.data as List).map((item) {
+          if (item is Map && item.containsKey("name")) {
+            return item["name"].toString(); // Extract "name" value
+          } else {
+            return ""; // Or handle the error differently
+          }
+        }).toList();
+      } else {
+        throw Exception("API response is not a list.");
+      }
     } on DioException catch (e) {
       print("DioError: ${e.message}");
       print("DioError Response: ${e.response}");
