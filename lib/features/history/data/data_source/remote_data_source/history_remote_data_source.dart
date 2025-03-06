@@ -25,10 +25,10 @@ class HistoryRemoteDataSource {
       }
     } on DioException catch (e) {
       print('DioError: ${e.message}'); // Log the error
-      return []; // Return an empty list on error
+      throw Exception('Failed to fetch winners: ${e.message}');
     } catch (e) {
       print('General Error: $e'); // Log the error
-      return []; // Return an empty list on error
+      throw Exception('Failed to fetch winners: $e');
     }
   }
 }

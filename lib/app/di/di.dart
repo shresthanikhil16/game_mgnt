@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:game_mgnt/app/shared_prefs/token_shared_prefs.dart';
 import 'package:game_mgnt/core/network/api_service.dart';
+import 'package:game_mgnt/core/network/connectivity_service.dart';
 import 'package:game_mgnt/core/network/hive_service.dart';
 import 'package:game_mgnt/features/auth/data/data_source/auth_local_data_souce/auth_local_data_source.dart';
 import 'package:game_mgnt/features/auth/data/data_source/auth_remote_data_source/auth_remote_data_source.dart';
@@ -19,7 +20,9 @@ import 'package:game_mgnt/features/chat/domain/usecase/get_message_usecase.dart'
 import 'package:game_mgnt/features/chat/domain/usecase/sned_message_usecase.dart';
 import 'package:game_mgnt/features/chat/presentation/view_model/chat_bloc.dart';
 import 'package:game_mgnt/features/dashboard/presentation/view_model/dashboard_cubit.dart';
+import 'package:game_mgnt/features/history/data/data_source/history_local_data_source/history_local_data_source.dart';
 import 'package:game_mgnt/features/history/data/data_source/remote_data_source/history_remote_data_source.dart';
+import 'package:game_mgnt/features/history/data/model/history_api_model.dart';
 import 'package:game_mgnt/features/history/data/repository/history_repository_remote.dart';
 import 'package:game_mgnt/features/history/domain/repository/history_repository.dart';
 import 'package:game_mgnt/features/history/domain/use_case/history_get_winners_usecase.dart';
@@ -39,6 +42,7 @@ import 'package:game_mgnt/features/tournament_creation/domain/use_case/get_tourn
 import 'package:game_mgnt/features/tournament_creation/domain/use_case/tournament_creation_usecase.dart';
 import 'package:game_mgnt/features/tournament_creation/presentation/view_model/tournament_creation_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final getIt = GetIt.instance;
@@ -65,6 +69,7 @@ Future<void> _initSharedPreferences() async {
 
 void _initApiService() {
   getIt.registerLazySingleton<Dio>(() => ApiService(Dio()).dio);
+  getIt.registerLazySingleton<ConnectivityService>(() => ConnectivityService());
 }
 
 void _initHiveService() {
@@ -212,17 +217,24 @@ void _initHistoryDependencies() {
   getIt.registerLazySingleton<HistoryRemoteDataSource>(
     () => HistoryRemoteDataSource(dio: getIt<Dio>()),
   );
+  getIt.registerLazySingleton<HistoryLocalDataSource>(
+    () => HistoryLocalDataSource(Hive.box<HistoryApiModel>('historyBox')),
+  );
 
   getIt.registerLazySingleton<HistoryRepository>(
-    () => HistoryRepositoryImpl(remoteDataSource: getIt()),
+    () => HistoryRepositoryImpl(
+      remoteDataSource: getIt<HistoryRemoteDataSource>(),
+      localDataSource: getIt<HistoryLocalDataSource>(),
+      connectivityService: getIt<ConnectivityService>(),
+    ),
   );
 
   getIt.registerLazySingleton<GetWinnersUseCase>(
-    () => GetWinnersUseCase(repository: getIt()),
+    () => GetWinnersUseCase(repository: getIt<HistoryRepository>()),
   );
 
   getIt.registerFactory<HistoryBloc>(
-    () => HistoryBloc(getWinnersUseCase: getIt()),
+    () => HistoryBloc(getWinnersUseCase: getIt<GetWinnersUseCase>()),
   );
 }
 

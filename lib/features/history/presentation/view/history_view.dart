@@ -1,4 +1,3 @@
-// lib/features/history/presentation/view/history_view.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game_mgnt/features/history/presentation/view_model/history_bloc.dart';
@@ -25,11 +24,18 @@ class _HistoryViewState extends State<HistoryView> {
       appBar: AppBar(
         title: const Text(
           'History',
-          style: TextStyle(color: Colors.white), // Set the text color to white
+          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: const Color(0xFF990000),
       ),
-      body: BlocBuilder<HistoryBloc, HistoryState>(
+      body: BlocConsumer<HistoryBloc, HistoryState>(
+        listener: (context, state) {
+          if (state is HistoryError && state.message.contains('No internet')) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('No internet connection')),
+            );
+          }
+        },
         builder: (context, state) {
           if (state is HistoryLoading) {
             return const Center(child: CircularProgressIndicator());
