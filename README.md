@@ -7,12 +7,6 @@ A new Flutter project.
 Guide Engine is a comprehensive tournament management app designed to streamline game organization, player registration, and matchmaking. It features automated player shuffling, real-time chat, and a user-friendly interface for seamless tournament creation. Built with Flutter, Node.js, and MongoDB, and following Clean Architecture with BLoC for state management, Guide Engine ensures scalability, maintainability, and an efficient gaming experience.
 A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
 ![Screenshot_20250306_110734](https://github.com/user-attachments/assets/86cafae2-0c9e-4726-b3d0-e0a9dc9834e0)
 ![Screenshot_20250306_110633](https://github.com/user-attachments/assets/4679b635-3c7d-4da0-97ae-6483b24a3c67)
 ![Screenshot_20250306_110716](https://github.com/user-attachments/assets/62256f5a-c4f4-452a-beb7-43e07e772c68)
